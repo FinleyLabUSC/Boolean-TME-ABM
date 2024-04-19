@@ -66,32 +66,51 @@ void Environment::save(double tstep, double tstamp) {
                 else{
                     phenotype_char = cell.t_cell_phenotype_Trajectory.back();         
                 }
-
+                //negative 1 is a placeholder to maintain symmetry of columns when writing to csv
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
                     << cell.radius << ","
                     << phenotype_char << ","
-                    << cell.pdl1 << std::endl;
+                    << cell.pdl1 << "," 
+                    << -1 << std::endl; 
             }
             else{
                 //we are in the array and can index
+                //negative 1 is a placeholder to maintain symmetry of columns when writing to csv
                 std::string pType = cell.t_cell_phenotype_Trajectory[idx]; 
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
                     << cell.radius << ","
                     << pType << ","
-                    << cell.pdl1 << std::endl;
+                    << cell.pdl1 << "," 
+                    << -1 << std::endl; 
             }
-        }
+            }
+        
         else{
-            myfile << cell.type << ","
+            if(cell.type == 0){
+                myfile << cell.type << ","
                << cell.x[0] << ","
                << cell.x[1] << ","
                << cell.radius << ","
                << cell.state << ","
-               << cell.pdl1 << std::endl;
+               << cell.pdl1 << "," 
+                << cell.ferroptosis_sensitive << std::endl; 
+            }
+            else{
+
+                myfile << cell.type << ","
+               << cell.x[0] << ","
+               << cell.x[1] << ","
+               << cell.radius << ","
+               << cell.state << ","
+               << cell.pdl1 << "," 
+                << -1 << std::endl; 
+
+            }            
+
         }
     }
     myfile.close();

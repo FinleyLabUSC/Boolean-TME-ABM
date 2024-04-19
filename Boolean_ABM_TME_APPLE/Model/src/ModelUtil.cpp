@@ -36,3 +36,22 @@ std::vector<std::string> get2dvecrow(std::vector<std::vector<std::string>>& vec,
     return res; 
 
 }
+
+
+std::array<double, 2> getBrownianUpdate(std::array<double, 2>& old_loc, float mu, float sigma){
+    //simulate brownian motion, gets old location, adds some dx and dy and 
+    //returns the new location
+
+    double x = old_loc[0]; 
+    double y = old_loc[1]; 
+ 
+
+    static std::mt19937 gen(std::random_device{}());
+    std::normal_distribution<double> dist(mu, sigma);
+
+    double dx = dist(gen); 
+    double dy = dist(gen);
+
+    std::array<double, 2> res = {x+dx, y+dy}; 
+    return res; 
+}

@@ -291,7 +291,15 @@ void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
      * commented out code for migrating up a pseudo-chemotaxix gradient
      * it produces weird spatial behaviors and makes it difficult to recruit immune cells around the tumor
      */
-    if(type == 0 || state == -1 || state == 7){return;} // cancer cells, dead cells, suppressed CD8
+    if(state == -1 || state == 7){return;} // cancer cells, dead cells, suppressed CD8
+
+    if(type == 0){
+        std::array<double, 2> new_loc = getBrownianUpdate(x); //only for 2d
+        this->x[0] = this->x[0] + dt*migrationSpeed*new_loc[0]; 
+        this->x[1] = this->x[1] + dt*migrationSpeed*new_loc[1]; 
+        return; 
+
+    }
 
     /*std::uniform_int_distribution<int> choose_cv(0, chemotaxVals.size()-1);
     int cv = choose_cv(mt);

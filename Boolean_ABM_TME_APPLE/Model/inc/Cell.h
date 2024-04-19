@@ -7,6 +7,7 @@
 #include <random>
 #include <string>
 #include <iostream>
+#include "ModelUtil.h"
 
 class Cell{
 public:
@@ -129,6 +130,9 @@ public:
     double baseKillProb;
     double infScale;
     std::vector<std::string> t_cell_phenotype_Trajectory; 
+
+    int ferroptosis_sensitive; 
+
 
     // identification
     int id;
