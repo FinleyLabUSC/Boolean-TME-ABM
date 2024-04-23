@@ -131,8 +131,9 @@ public:
     double infScale;
     std::vector<std::string> t_cell_phenotype_Trajectory; 
 
-    int ferroptosis_sensitive; 
-
+    //Ferroptosis-specific paramters
+    float ferroptosis_sensitive; //0 if insensitive, 1 if so...keep unsigned, save the bit, 
+    int death_from_ferroptosis; //-1 if not dead, 0 if normal death, 1 if ferroptosis medated
 
     // identification
     int id;

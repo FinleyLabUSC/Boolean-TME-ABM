@@ -37,7 +37,7 @@ recDelay = 2.85
 necroticGrowth = 0 #params[12]
 necrosisLimit = 940.3
 
-p_ferroptosis_sensitive = 0.2 #probability that a cell is ferroptosis sensitive
+p_ferroptosis_sensitive = 0.5 #probability that a cell is ferroptosis sensitive
 
 #############################
 # ------------------------- #
@@ -51,8 +51,8 @@ cellParams[1, 0] = k  # kc
 cellParams[2, 0] = d  # damping
 cellParams[3, 0] = ol  # overlap
 cellParams[4, 0] = 20.0  # diameter (um)
-cellParams[5, 0] = 1/24.0  # div probability (hours) # Gong 2017
-cellParams[6, 0] = 0.02 #1/(24.0*5.0) # death probability (hours) # Gong 2017
+cellParams[5, 0] = 0.02 #1/24.0  # div probability (hours) # Gong 2017
+cellParams[6, 0] = 1/(24.0*5.0) # death probability (hours) # Gong 2017
 cellParams[7, 0] = 40.0  # influence distance
 cellParams[8, 0] = cancerPDL1_m  # pdl1 when expressed
 cellParams[9, 0] = 1e6  # prob of gaining pdl1 (is multiplied by t cell influence) -> pretty sure the cancer cells from the images already had pdl1 when injected (check with evanthia). 1e6 pretty much guarantees that cancer cells will express pdl1

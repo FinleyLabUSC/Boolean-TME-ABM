@@ -125,7 +125,7 @@ void Environment::internalCellFunctions(double tstep, size_t step_count) {
                 cell_list.push_back(Cell({newLoc[0], newLoc[1]},
                                      cell_list.size(),
                                      cellParams,
-                                     cell_list[i].type, tCellPhenotypeTrajectory_1));
+                                     cell_list[i].type, tCellPhenotypeTrajectory_1, step_count));
 
             }
             cell_list[cell_list.size() - 1].inherit(cell_list[i].inheritanceProperties());

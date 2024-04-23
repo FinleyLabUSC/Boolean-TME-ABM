@@ -15,7 +15,7 @@ void Environment::initializeCells() {
         for(int j=0; j<nCells; ++j){
             double x = i * cellParams[4][0] * cos(2 * 3.1415 * j / nCells);
             double y = i * cellParams[4][0] * sin(2 * 3.1415 * j / nCells);
-            cell_list.push_back(Cell({x, y}, q, cellParams, 0, tCellPhenotypeTrajectory_1));
+            cell_list.push_back(Cell({x, y}, q, cellParams, 0, tCellPhenotypeTrajectory_1, 0));
             q++;
         }
     }
@@ -66,7 +66,7 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
                 cell_list.push_back(Cell(recLoc,
                                      static_cast<int>(cell_list.size()),
                                      cellParams,
-                                     immuneCellRecTypes[i], tCellPhenotypeTrajectory_1));
+                                     immuneCellRecTypes[i], tCellPhenotypeTrajectory_1, step_count));
 
             }
             

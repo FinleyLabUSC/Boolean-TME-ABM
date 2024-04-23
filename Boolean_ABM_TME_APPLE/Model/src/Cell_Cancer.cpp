@@ -20,14 +20,11 @@ void Cell::initializeCancerCell(std::vector<std::vector<double>> &cellParams, si
     float p_ferroptosis_sensitive = cellParams[10][0]; //probability a cell is ferroptosis sensitive
     std::uniform_real_distribution<double> dis(0.0, 1.0); //instantiate uniform distribution
 
-    if(dis(mt) <= p_ferroptosis_sensitive){
-        ferroptosis_sensitive = 1; 
-    }
-    else{
-        ferroptosis_sensitive = 0; 
-    }
 
+    int time_delay = 150;
 
+    ferroptosis_sensitive = dis(mt); 
+    death_from_ferroptosis = -1; 
 
     
 }

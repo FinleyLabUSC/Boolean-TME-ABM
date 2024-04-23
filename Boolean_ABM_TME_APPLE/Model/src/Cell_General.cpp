@@ -71,7 +71,7 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
     probTh = 0.01;
 
     if(cellType == 0){
-        initializeCancerCell(cellParams);
+        initializeCancerCell(cellParams, init_tstamp);
     } else if(cellType == 1){
         initializeMacrophageCell(cellParams);
     } else if(cellType == 2){
