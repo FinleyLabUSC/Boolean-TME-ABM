@@ -14,6 +14,7 @@
 #include <filesystem> 
 #include <array>
 #include "/opt/homebrew/opt/libomp/include/omp.h"
+#include <chrono>
 
 
 
@@ -34,6 +35,7 @@ private:
     void tumorSize();
     void necrosis(double tstep);
     double calculateDiffusibles(std::array<double, 2> x);
+    void simulateTriggerWave(double tstep, double step_count); 
 
     void save(double tstep, double tstamp);
     void loadParams();
@@ -88,6 +90,11 @@ private:
     double necroticLimit;
     std::array<double, 2> tumorCenter;
     double recruitmentDelay;
+
+    //ferroptosis params 
+    bool triggerWave; 
+    double ferroptosisDelay; 
+    double ferroptosisRadius; 
 
     // environment params
     double simulationDuration;

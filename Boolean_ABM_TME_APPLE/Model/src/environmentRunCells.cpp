@@ -1,6 +1,8 @@
 #include "Environment.h"
 #include "ModelUtil.h"
 
+using namespace std::chrono; 
+
 void Environment::neighborInfluenceInteractions(double tstep, size_t step_count) {
 
     /*
@@ -20,14 +22,20 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
     for(int i=0; i<cell_list.size(); ++i){
         // reset neighborhood and influence
         cell_list[i].neighbors.clear();
+        cell_list[i].ferroptosisNeighbors.clear(); 
         cell_list[i].clearInfluence();
         for(auto &c : cell_list){
             // assume that a cell cannot influence itself
+
             if(cell_list[i].id != c.id){
                 cell_list[i].neighboringCells(c.x, c.id);
                 cell_list[i].addInfluence(c.x, c.influenceRadius, c.state);
+                if(cell_list[i].type == 0 && c.type == 0){
+                    cell_list[i].ferroptosis_neighborhood(c);     
+                }
                 //cell_list[i].addChemotaxis(c.x, c.influenceRadius, c.type);
             }
+            
         }
         cell_list[i].indirectInteractions(tstep);
     }
@@ -131,7 +139,11 @@ void Environment::internalCellFunctions(double tstep, size_t step_count) {
             cell_list[cell_list.size() - 1].inherit(cell_list[i].inheritanceProperties());
         }
     }
-
+    if(triggerWave){
+        for(auto &c : cell_list){
+            c.evalFerroptosis(triggerWave);
+        }   
+    }
     // remove dead cells
     std::vector<int> dead;
     for(int i=0; i<cell_list.size(); ++i){

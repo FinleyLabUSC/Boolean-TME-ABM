@@ -75,6 +75,22 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
     }
 }
 
+void Environment::simulateTriggerWave(double tstep, double step_count){
+    if(triggerWave){
+        return; 
+    }
+    if(step_count/24 > ferroptosisDelay){
+        std::array<double, 2>center_of_trigger = {0.0, 0.0}; 
+        for(auto&c : cell_list){
+        if(c.calcDistance(center_of_trigger) <= ferroptosisRadius){
+            c.evalFerroptosis(triggerWave); 
+            }
+        }
+        triggerWave = true; 
+    }
+    return; 
+}
+
 std::array<double, 2> Environment::recruitmentLocation() {
     /*
      * cells enter a random distance away from the tumor radius

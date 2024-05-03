@@ -88,6 +88,11 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
     tumorRadius = 0;
     necroticRadius = 0;
 
+    triggerWave = false; 
+    ferroptosisDelay = envParams[5]; 
+    ferroptosisRadius = envParams[6]; 
+
+
     steps = 0;
     day = 0;
 
@@ -150,6 +155,7 @@ void Environment::simulate(double tstep) {
     while(tstep*steps/24 < simulationDuration) {
         recruitImmuneCells(tstep, tstep*steps); 
         runCells(tstep, tstep*steps);
+        simulateTriggerWave(tstep, tstep*steps); 
         tumorSize();
         necrosis(tstep);
 

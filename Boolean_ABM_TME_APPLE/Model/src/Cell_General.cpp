@@ -69,7 +69,8 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
 
     // for influence distance, assume a soft-cutoff where p(distance) = probTh
     probTh = 0.01;
-
+    ferroptosisInfluenceDistance = 0; 
+    
     if(cellType == 0){
         initializeCancerCell(cellParams, init_tstamp);
     } else if(cellType == 1){

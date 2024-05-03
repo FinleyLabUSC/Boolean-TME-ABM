@@ -68,6 +68,9 @@ public:
     // cancer specific
     void cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, double kp, double dt);
     void cancer_gainPDL1(double dt);
+    void ferroptosis_neighborhood(Cell& c);
+    void evalFerroptosis(bool triggerWave); 
+
 
     // other functions
     double calcDistance(std::array<double, 2> otherX);
@@ -88,6 +91,8 @@ public:
     bool compressed;
     double currentOverlap;
     std::vector<int> neighbors;
+    std::vector<Cell*> ferroptosisNeighbors; 
+
 
     // age, division, and lifespan
     double divProb;
@@ -134,6 +139,8 @@ public:
     //Ferroptosis-specific paramters
     float ferroptosis_sensitive; //0 if insensitive, 1 if so...keep unsigned, save the bit, 
     int death_from_ferroptosis; //-1 if not dead, 0 if normal death, 1 if ferroptosis medated
+    double ferroptosisInfluenceDistance; 
+    
 
     // identification
     int id;

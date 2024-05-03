@@ -111,12 +111,15 @@ recParams[3] = 50.0  # recDist (recruit a uniform distribution recDist away from
 #recParams[3] = 0.25 # max recruitment cytokine conc
 recParams[4] = recDelay # recruitment delay (days)
 
-envParams = np.zeros((5, 1))
+envParams = np.zeros((7, 1))
 envParams[0] = 5.0  # initTumorSize x | circle radius
 envParams[1] = 24.0 # simulation duration (days)
 envParams[2] = necroticGrowth # necrotic growth
 envParams[3] = 0.5 # necrotic region outward force
 envParams[4] = necrosisLimit # necrosis limit (accounts for diffusion limit of oxygen, but is adjustable based on the scale of the simulation)
+envParams[5] = 5 #ferroptosis delay
+envParams[6] = 30 #ferroptosis 
+
 
 # os.system('mkdir -p ' + sys.argv[1] + '/params')
 saveFld = sys.argv[1]+'/set_'+sys.argv[2]+'/params'

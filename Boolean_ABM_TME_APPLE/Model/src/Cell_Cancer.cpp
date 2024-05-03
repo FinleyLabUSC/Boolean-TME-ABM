@@ -14,10 +14,12 @@ void Cell::initializeCancerCell(std::vector<std::vector<double>> &cellParams, si
     influenceRadius = cellParams[7][0];
     pdl1WhenExpressed = cellParams[8][0];
     pdl1Shift = cellParams[9][0];
+    
 
     rmax = 1.5*radius*2;
 
     float p_ferroptosis_sensitive = cellParams[10][0]; //probability a cell is ferroptosis sensitive
+    ferroptosisInfluenceDistance = cellParams[11][0]; 
     std::uniform_real_distribution<double> dis(0.0, 1.0); //instantiate uniform distribution
 
 
@@ -25,9 +27,9 @@ void Cell::initializeCancerCell(std::vector<std::vector<double>> &cellParams, si
 
     ferroptosis_sensitive = dis(mt); 
     death_from_ferroptosis = -1; 
-
     
 }
+
 
 void Cell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, double kp, double dt) {
     /*
@@ -43,6 +45,44 @@ void Cell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, d
         }
     }
 }
+void Cell::ferroptosis_neighborhood(Cell& c){
+    // std::cout << "in here" << std::endl; 
+
+    if(calcDistance(c.x) <= ferroptosisInfluenceDistance){
+        
+        ferroptosisNeighbors.push_back(&c); 
+    }
+}
+
+void Cell::evalFerroptosis(bool triggerWave){
+    double ferroptosis_influence = 0; 
+    if(!triggerWave){
+        for(Cell* c : ferroptosisNeighbors){
+            ferroptosis_influence += c->ferroptosis_sensitive; 
+        }
+        if(ferroptosis_influence > 1){
+            ferroptosis_sensitive = -1; 
+        }
+
+    }
+    else{
+        double influence_threshold = 15; 
+        bool neighborHasFerroptosis = false; 
+        for(Cell* c : ferroptosisNeighbors){
+            if( c->ferroptosis_sensitive < 0){
+                neighborHasFerroptosis = true;  
+            }
+            else{
+                ferroptosis_influence += c->ferroptosis_sensitive;     
+            }
+        }
+        if(ferroptosis_influence > influence_threshold && neighborHasFerroptosis){
+            ferroptosis_sensitive = -1; 
+        }
+    }
+    return; 
+}
+
 
 void Cell::cancer_gainPDL1(double dt) {
     /*
