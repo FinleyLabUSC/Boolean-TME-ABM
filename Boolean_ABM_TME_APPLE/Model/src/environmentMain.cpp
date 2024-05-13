@@ -162,8 +162,15 @@ void Environment::simulate(double tstep) {
         steps += 1;
         printStep(steps * tstep);
         updateTimeSeries();
+
+        double flag_check = (steps*tstep) / 24; 
+        if(flag_check > ferroptosisDelay && flag_check < (ferroptosisDelay+1)){
+            save(tstep, steps*tstep);
+        }
         if (fmod(steps * tstep, 24) == 0) {
-            // save every simulation day
+            // save every simulation day        
+            
+            //day that Ferroptosis is induced
             save(tstep, steps*tstep);
         }
 

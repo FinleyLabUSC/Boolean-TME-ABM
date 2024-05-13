@@ -43,6 +43,13 @@ void Environment::save(double tstep, double tstamp) {
 
     std::ofstream myfile;
     std::string day_dir = saveDir + "/cellLists/day_" + std::to_string(day);
+
+    double flag_check = tstamp / 24; 
+    
+    if(flag_check > ferroptosisDelay && flag_check < (ferroptosisDelay+1)){
+        day_dir = saveDir + "/cellLists/day_" + std::to_string(day-1) + "_hour_" + std::to_string((int)tstamp-(int)(ferroptosisDelay * 24 - 1));
+    }
+
     std::string str = "mkdir -p " + day_dir;
     const char *command = str.c_str();
     std::system(command);
@@ -223,7 +230,14 @@ void Environment::save(double tstep, double tstamp) {
     myfile << std::endl;
     myfile.close();
 
-    ++day;
+    if(flag_check > ferroptosisDelay && flag_check < (ferroptosisDelay+1)){
+        return; 
+    }
+    else{
+        ++day;   
+    }
+    
+    // ++day;
 
     /*int cd4idx = 0;
     int cd8idx = 0;

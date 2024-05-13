@@ -66,7 +66,7 @@ void Cell::evalFerroptosis(bool triggerWave){
 
     }
     else{
-        double influence_threshold = 15; 
+        double influence_threshold = 10; 
         bool neighborHasFerroptosis = false; 
         for(Cell* c : ferroptosisNeighbors){
             if( c->ferroptosis_sensitive < 0){
