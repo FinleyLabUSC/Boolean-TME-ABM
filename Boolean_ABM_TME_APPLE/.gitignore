@@ -6,4 +6,5 @@ CMakeCache.txt
 CMakeFiles
 Makefile
 .DS_Store/
+.vscode/
 *.mp4
