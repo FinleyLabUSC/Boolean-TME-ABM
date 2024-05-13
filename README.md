@@ -1,8 +1,6 @@
-# Boolean-TME-ABM
+## Boolean-TME-ABM
 
-
-This repository contains a C++ program that builds using CMake and Make. 
-
+This repository contains a C++ program that builds using CMake and Make.
 
 ## Prerequisites
 
@@ -12,6 +10,11 @@ Before running the program, ensure you have the following installed on your syst
 - Make (Usually available by default on Unix-like systems)
 - C++ compiler (such as g++ for Linux or macOS, or Visual C++ for Windows)
 
+If you are using **Apple silicon**, please ensure you have `libomp` installed. You can install it via Homebrew:
+
+```bash
+$ brew install libomp
+```
 ## Build and Run Instructions
 
 Follow these steps to build and run the program:
