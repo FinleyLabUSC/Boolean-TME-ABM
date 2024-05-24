@@ -117,7 +117,6 @@ void Environment::save(double tstep, double tstamp) {
                 << -1 << std::endl; 
 
             }            
-
         }
     }
     myfile.close();

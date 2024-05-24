@@ -61,7 +61,8 @@ void Cell::evalFerroptosis(bool triggerWave){
             ferroptosis_influence += c->ferroptosis_sensitive; 
         }
         if(ferroptosis_influence > 1){
-            ferroptosis_sensitive = -1; 
+            ferroptosis_sensitive = -1;
+            //modify cell-specific parameter's here
         }
 
     }

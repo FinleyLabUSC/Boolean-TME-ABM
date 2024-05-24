@@ -116,7 +116,7 @@ void Environment::internalCellFunctions(double tstep, size_t step_count) {
             cell_list[i].state = -1;
         }
         cell_list[i].prolifState();
-        std::array<double, 3> newLoc = cell_list[i].proliferate(tstep);
+        std::array<double, 3> newLoc = cell_list[i].proliferate(tstep); //<x, y, bool (can we place)>
         if(newLoc[2] == 1){
             if(cell_list[i].type == 3){
                 int phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
