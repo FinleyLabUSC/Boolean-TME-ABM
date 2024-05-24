@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <random>
 #include "Cell.h"
+#include "Vessel.h"
 #include <iostream>
 #include <iomanip>      
 #include <fstream>
@@ -30,6 +31,7 @@ private:
     void neighborInfluenceInteractions(double tstep, size_t step_count);
     void internalCellFunctions(double tstep, size_t step_count);
     void recruitImmuneCells(double tstep, size_t step_count);
+    void recruitVessels(double tstep, size_t step_count); 
     std::array<double, 2> recruitmentLocation();
     void tumorSize();
     void necrosis(double tstep);
@@ -39,6 +41,7 @@ private:
     void loadParams();
 
     void initializeCells();
+    void initializeVessels(); 
     void calculateForces(double tstep);
     void updateTimeSeries();
 
@@ -48,6 +51,7 @@ private:
 
     // cell lists
     std::vector<Cell> cell_list;
+    std::vector<Vessel> vessel_list; 
 
     // time courses
     std::vector<int> cancerTS;
@@ -73,6 +77,8 @@ private:
     std::vector<std::vector<double>> cellParams;
     std::vector<double> recParams;
     std::vector<double> envParams;
+    std::vector<double> vesselParams; 
+
 
     std::string saveDir;
     int steps;
@@ -89,6 +95,15 @@ private:
     std::array<double, 2> tumorCenter;
     double recruitmentDelay;
 
+    //vessel related information 
+    double vesRec;
+    double vesAge;
+    double vesMu;
+    double vesDec;
+    double vesDens;
+    double vesRad; 
+    double vesInfluenceDistance; 
+    
     // environment params
     double simulationDuration;
     int day;

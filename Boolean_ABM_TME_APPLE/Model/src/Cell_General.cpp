@@ -1,4 +1,5 @@
 #include "Cell.h"
+#include "ModelUtil.h"
 
 /*
  * CELL TYPES
@@ -284,14 +285,46 @@ void Cell::age(double dt, size_t step_count) {
     }
 }
 
-void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
+void Cell::migrate(double dt, std::array<double,2> tumorCenter, std::vector<Vessel>& vessel_list) {
     /*
      * biased random-walk towards tumor center
      *
      * commented out code for migrating up a pseudo-chemotaxix gradient
      * it produces weird spatial behaviors and makes it difficult to recruit immune cells around the tumor
      */
-    if(type == 0 || state == -1 || state == 7){return;} // cancer cells, dead cells, suppressed CD8
+    // if(type == 0 || state == -1 || state == 7){return;} // cancer cells, dead cells, suppressed CD8
+    if(state == -1 || state == 7){return; } // allow cancer cells to migrate 
+    if(type == 0){
+        //for cancer cells we simulate brownian motion
+
+        
+        
+        for(auto& vessel : vessel_list){
+            if(vessel.state == 0) continue; 
+
+            double dis = vessel.calcDistance(this->x);
+
+            if(dis <= vessel.influenceDistance){
+                double diff_x = vessel.x[0] - x[0];
+                double diff_y = vessel.x[1] - x[1];
+                double mag = sqrt(pow(diff_x,2) + pow(diff_y, 2)); 
+                diff_x = diff_x / mag; 
+                diff_y = diff_y / mag; 
+                std::array<double, 2> diff_array; 
+                diff_array[0] = diff_x; 
+                diff_array[1] = diff_y; 
+                diff_array = getBrownianUpdate(diff_array); 
+                this->x[0] = this->x[0] + dt*migrationSpeed*diff_array[0]; 
+                this->x[1] = this->x[1] + dt*migrationSpeed*diff_array[1]; 
+                return; 
+            }
+        }
+        std::array<double, 2> new_loc = getBrownianUpdate(x); //only for 2d
+        this->x[0] = this->x[0] + dt*migrationSpeed*new_loc[0]; 
+        this->x[1] = this->x[1] + dt*migrationSpeed*new_loc[1]; 
+        return; 
+    }
+    
 
     /*std::uniform_int_distribution<int> choose_cv(0, chemotaxVals.size()-1);
     int cv = choose_cv(mt);
@@ -471,6 +504,7 @@ void Cell::directInteractions(int interactingState, std::array<double, 2> intera
         if(interactingState == 6){
             // interactionProperties = {radius, killProb}
             cancer_dieFromCD8(interactingX, interactionProperties[0], interactionProperties[1], tstep);
+            
         }
         return;
     } else if (state == 4){

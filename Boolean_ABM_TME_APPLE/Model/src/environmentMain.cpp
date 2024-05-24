@@ -75,7 +75,7 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
     }
     immuneCellRecTypes = {3, 1, 2}; // {CD8, macrophage, CD4} -> same order as RecRates
 
-    //recDist = recParams[3];
+    recDist = recParams[3];
     maxRecCytoConc = recParams[3];
     recruitmentDelay = recParams[4];
 
@@ -87,6 +87,16 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
     tumorCenter = {0,0};
     tumorRadius = 0;
     necroticRadius = 0;
+
+
+    
+    vesRec = vesselParams[0];
+    vesRad = vesselParams[1] / 2; 
+    vesDens = vesselParams[2];
+    vesAge = vesselParams[4]; 
+    vesMu = vesselParams[5]; 
+    vesDec = vesselParams[6]; 
+    vesInfluenceDistance = vesselParams[7]; 
 
     steps = 0;
     day = 0;
@@ -140,7 +150,7 @@ void Environment::simulate(double tstep) {
      *  run cell functions
      * ends once time limit is reached or there are no more cancer cells
      */
-
+    initializeVessels(); 
     initializeCells();
     tumorSize();
 
@@ -149,6 +159,7 @@ void Environment::simulate(double tstep) {
     std::cout << "starting simulations...\n";
     while(tstep*steps/24 < simulationDuration) {
         recruitImmuneCells(tstep, tstep*steps); 
+        recruitVessels(tstep, tstep*steps);
         runCells(tstep, tstep*steps);
         tumorSize();
         necrosis(tstep);

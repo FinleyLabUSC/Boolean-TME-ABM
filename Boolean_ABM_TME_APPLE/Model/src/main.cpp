@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
     str = "python genParams.py "+folder+" "+set + " "+ pST + " " + dp_fac + " " + kp_fac;
     command = str.c_str();
     std::system(command);
-
+    
     double start = omp_get_wtime();
     Environment model(folder, set, "Model/phenotype_out/"); //can replace with a directory representing any other phenotype state 
     model.simulate(1);

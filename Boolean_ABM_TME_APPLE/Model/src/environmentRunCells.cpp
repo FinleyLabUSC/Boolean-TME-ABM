@@ -31,6 +31,15 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         }
         cell_list[i].indirectInteractions(tstep);
     }
+#pragma omp parallel for
+    for(int i=0; i<vessel_list.size(); ++i){
+        // reset neighborhood and influence
+        vessel_list[i].neighborhoodLoc.clear();
+        vessel_list[i].neighborhood.clear(); 
+        for(auto &c : cell_list){
+            vessel_list[i].neighboringCells(c); 
+        }
+    }
 
 #pragma omp parallel for
     for(int i=0; i<cell_list.size(); ++i){
@@ -42,11 +51,17 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         }
     }
 
+#pragma omp parallel for 
+    for(int i =0; i < vessel_list.size(); ++i){
+        vessel_list[i].neighborhoodInteractions(); 
+    }
 #pragma omp parallel for
     for(int i=0; i<cell_list.size(); ++i){
         cell_list[i].differentiate(tstep);
     }
 }
+
+
 
 void Environment::calculateForces(double tstep) {
     /*
@@ -66,7 +81,7 @@ void Environment::calculateForces(double tstep) {
         // migrate first
 #pragma omp parallel for
         for(int i=0; i<cell_list.size(); ++i){
-            cell_list[i].migrate(dt, tumorCenter);
+            cell_list[i].migrate(dt, tumorCenter, vessel_list);
         }
 
         // calc forces
@@ -92,7 +107,17 @@ void Environment::calculateForces(double tstep) {
         }
         cell_list[i].isCompressed();
     }
+
+#pragma omp parallel for 
+    for(int i=0; i < vessel_list.size(); ++i){
+        for(int j =0; j < vessel_list[i].neighborhood.size(); ++j){
+            vessel_list[i].calculateOverlap(vessel_list[i].neighborhood[j].x, 10);
+        }
+        vessel_list[i].isCompressed(); 
+    }
 }
+
+
 
 void Environment::internalCellFunctions(double tstep, size_t step_count) {
     /*
@@ -150,6 +175,11 @@ void Environment::internalCellFunctions(double tstep, size_t step_count) {
             throw std::runtime_error("Environment::internalCellFunctions -> dead cell not removed");
         }
     }
+
+    //remove dead vessels
+    vessel_list.erase(std::remove_if(vessel_list.begin(), vessel_list.end(),
+                      [](const Vessel& v) { return v.state == 0; }),
+                  vessel_list.end());
 }
 
 void Environment::runCells(double tstep, size_t step_count) {

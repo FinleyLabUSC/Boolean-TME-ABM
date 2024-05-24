@@ -1,12 +1,15 @@
 #ifndef IMMUNE_MODEL_CELL_H
 #define IMMUNE_MODEL_CELL_H
 
+#include "Vessel.h"
 #include <array>
 #include <vector>
 #include <cmath>
 #include <random>
 #include <string>
 #include <iostream>
+
+class Vessel; 
 
 class Cell{
 public:
@@ -41,7 +44,7 @@ public:
     void inherit(std::vector<double> properties);
     std::vector<double> inheritanceProperties();
     void age(double dt, size_t step_count);
-    void migrate(double dt, std::array<double, 2> tumorCenter);
+    void migrate(double dt, std::array<double, 2> tumorCenter, std::vector<Vessel>& vessel_list);
     void indirectInteractions(double tstep);
     void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
     std::vector<double> directInteractionProperties(int interactingState, size_t step_count);

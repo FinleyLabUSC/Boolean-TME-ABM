@@ -21,6 +21,54 @@ void Environment::initializeCells() {
     }
 }
 
+void Environment::initializeVessels(){
+
+    // we take the initial tumor radius, pad it with the vesselRadius 
+    //then we place the vessels somewhere outside this initial radius at
+    //a density dictated by vesDens, we sample from a uniform distribution 
+    //to uniformly place the number of vesels.
+    double some_radius = envParams[0]+vesRad; //this needs to be confirmed
+    
+    int Nves = M_PI*pow(some_radius, 2)/(vesDens); //type coerce to int
+
+    std::uniform_real_distribution<double> spacing(vesDens-100,vesDens+100);
+    std::uniform_real_distribution<double> vesDis(100,some_radius-100);
+    
+    
+
+    for(int q=0; q<Nves; ++q){
+        double i = vesDis(mt);
+        double j = vesDis(mt);
+        double space = spacing(mt);
+        bool badSpace = true;
+        int tries = 0;
+        while(badSpace){
+            tries++;
+            if(tries > 10000){
+                // if can't find a suitable location, just choose a random one
+                badSpace = false;
+            }
+            double minDis = 250;
+            for(auto & vessel : vessel_list){
+                double di = i - vessel.x[0];
+                double dj = j - vessel.x[1];
+                double distance = sqrt(di*di + dj*dj);
+                minDis = std::min(distance, minDis);
+            }
+            if(minDis < space){
+                i = vesDis(mt);
+                j = vesDis(mt);
+            } else{
+                badSpace = false;
+            }
+        }
+        
+        vessel_list.push_back(Vessel({i, j}, vesRad, envParams[2], vesMu, vesDec, 0, vesInfluenceDistance));
+        vessel_list[vessel_list.size()-1].generalLocation(0);
+    }
+    
+}
+
 void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
     // recruitment is scaled by number of cancer cells
     auto day = static_cast<double>(tstep*steps/24.0);
@@ -75,6 +123,42 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
     }
 }
 
+void Environment::recruitVessels(double tstep, size_t step_count){
+
+    auto day = static_cast<double>(tstep*steps/24.0);
+    if(day < recruitmentDelay){return;}
+
+    float vesselRecRate = 0.01; 
+    float pThreshold = 0.05; 
+    int numRecruit = static_cast<int>(vesselRecRate * cell_list.size()); 
+
+    std::uniform_real_distribution<float> p_recruit(0.0, 1.0); 
+    float a = p_recruit(mt); 
+    if(a <= pThreshold){
+        for(int i =0; i < 1; ++i){
+
+        std::normal_distribution<double> angle(0.0,1.0);
+        std::array<double, 2> dx = {angle(mt),
+                                    angle(mt)};
+        double norm = sqrt(dx[0]*dx[0] + dx[1]*dx[1]);
+    
+        std::uniform_real_distribution<double> loc(100, recDist+100); //test make sure vessel
+        double distance = loc(mt)+ tumorRadius; 
+    
+        float u_i = dx[0]/norm; 
+        float u_j = dx[1]/norm; 
+        float loc_x = float(distance)*u_i;
+        float loc_y = float(distance)*u_j; 
+
+        vessel_list.push_back(Vessel({loc_x, loc_y}, vesRad, envParams[2], vesMu, vesDec, 0, vesInfluenceDistance));
+        vessel_list[vessel_list.size()-1].generalLocation(0);
+        
+    }
+    }
+    return; 
+    
+
+}
 std::array<double, 2> Environment::recruitmentLocation() {
     /*
      * cells enter a random distance away from the tumor radius

@@ -36,3 +36,37 @@ std::vector<std::string> get2dvecrow(std::vector<std::vector<std::string>>& vec,
     return res; 
 
 }
+
+std::array<double, 2> getBrownianUpdate(std::array<double, 2>& old_loc){
+    //simulate brownian motion, gets old location, adds some dx and dy and 
+    //returns the new location
+
+    double x = old_loc[0]; 
+    double y = old_loc[1]; 
+
+    float mu = 0; 
+    float sigma = 5; 
+
+    static std::mt19937 gen(std::random_device{}());
+    std::normal_distribution<double> dist(mu, sigma);
+
+    double dx = dist(gen); 
+    double dy = dist(gen);
+
+    std::array<double, 2> res = {x+dx, y+dy}; 
+    return res; 
+}
+
+std::vector<double> getDiff(std::vector<double>& a, std::vector<double>& b){
+    std::vector<double> res; 
+    for(int i =0; i < a.size(); ++i){
+        res.emplace_back(b[i] - a[i]);
+    }
+
+    return res; 
+
+}
+
+double getScaleFactor(double dp, double distance, double influenceLimit){
+    return exp((log2(dp) * log(2) * distance) / influenceLimit);
+} 

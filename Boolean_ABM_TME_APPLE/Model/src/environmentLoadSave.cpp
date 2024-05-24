@@ -26,6 +26,20 @@ void Environment::loadParams() {
     }
     dataRP.close();
 
+    //load in vessel Params
+
+    std::ifstream dataVP(saveDir + "/params/vesselParams.csv"); 
+    while(std::getline(dataVP, line)){
+        std::stringstream lineStream(line);
+        std::string cell;
+        std::vector<double> parsedRow;
+        while(std::getline(lineStream, cell, ',')){
+            parsedRow.push_back(std::stod(cell));
+        }
+        vesselParams.push_back(parsedRow[0]);
+    }
+    dataVP.close();
+
     std::ifstream dataEP(saveDir+"/params/envParams.csv");
     while(std::getline(dataEP, line)){
         std::stringstream lineStream(line);
@@ -92,6 +106,18 @@ void Environment::save(double tstep, double tstamp) {
                << cell.radius << ","
                << cell.state << ","
                << cell.pdl1 << std::endl;
+        }
+    }
+
+    for(auto& v: vessel_list){
+        
+        if(v.state!=0){
+            myfile << 25 << ","
+            << v.x[0] << ","
+            << v.x[1] << "," 
+            << v.radius << "," 
+            << v.health << ","
+            << v.mu << std::endl;
         }
     }
     myfile.close();
