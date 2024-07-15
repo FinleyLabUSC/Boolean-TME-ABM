@@ -29,7 +29,7 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
                 //cell_list[i].addChemotaxis(c.x, c.influenceRadius, c.type);
             }
         }
-        cell_list[i].indirectInteractions(tstep);
+        cell_list[i].indirectInteractions(tstep, step_count);
     }
 
 #pragma omp parallel for

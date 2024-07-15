@@ -238,16 +238,17 @@ void Cell::age(double dt, size_t step_count) {
                 if(dis(mt) < deathProb){
                     state = -1;
                 }
-                
+                break; 
             case 'M': 
                 if(dis(mt) < (deathProb/2)){
                     state = -1;
                 }
-                
+                break; 
             default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate     
                 if(dis(mt) < deathProb){
                     state = -1;
                 }
+                
         }
         }
         else {
@@ -267,11 +268,12 @@ void Cell::age(double dt, size_t step_count) {
                 if(dis(mt) < deathProb){
                     state = -1;
                 }
+                break; 
             case 'M': 
                 if(dis(mt) < deathProb/2){
                     state = -1;
                 }
-                
+                break; 
             default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate
                 if(dis(mt) < deathProb){
                     state = -1;
@@ -419,7 +421,7 @@ std::vector<double> Cell::inheritanceProperties() {
     return {};
 }
 
-void Cell::indirectInteractions(double tstep) {
+void Cell::indirectInteractions(double tstep, size_t step_count) {
     /*
      * after determining total influences on the cell, run the indirect interaction functions
      */
@@ -444,7 +446,7 @@ void Cell::indirectInteractions(double tstep) {
         return;
     } else if (state == 6){
         // CD8 active
-        cd8_setKillProb();
+        cd8_setKillProb(step_count);
         return;
     } else if (state == 7){
         // CD8 suppressed
@@ -526,45 +528,6 @@ std::vector<double> Cell::directInteractionProperties(int interactingState, size
     } else if (state == 6){
         // CD8 active
         if(interactingState == 3){
-            size_t step_alive = step_count -  init_time;
-        
-            if((step_alive*pTypeStateTransition-1) < t_cell_phenotype_Trajectory.size()){
-                
-                std::string phenotype = t_cell_phenotype_Trajectory[step_alive*pTypeStateTransition - 1];
-                char phenotype_char = phenotype[0]; 
-                
-                switch(phenotype_char){
-                case 'N': 
-                    return {radius, killProb};
-                case 'M': 
-                    return {radius, killProb*2};
-                default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate
-                    return {radius, killProb/10};
-            }
-            }
-            else{ //we assume the t cell stays at the end of its trajectory until it dies
-
-                // std::string phenotype = t_cell_phenotype_Trajectory.back(); 
-                char phenotype_char; 
-                if (t_cell_phenotype_Trajectory.empty() || (t_cell_phenotype_Trajectory.size() == 0)){
-                    std::cerr << "WARNING directInteractionProperties: t_cell_phenotype_Trajectory is empty!" << std::endl;
-                    //handle any bada alloc error by assuming exhausted state...will debug this, very rare and not fatal 
-                    phenotype_char = 'E'; 
-                }
-                else{
-                    phenotype_char = t_cell_phenotype_Trajectory.back()[0];         
-                }
-            
-                // can set to E
-                switch(phenotype_char){
-                case 'N': 
-                    return {radius, killProb};
-                case 'M': 
-                    return {radius, killProb*2};
-                default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate
-                    return {radius, killProb/10};
-                }
-            }
             return {radius, killProb};
         }
         
