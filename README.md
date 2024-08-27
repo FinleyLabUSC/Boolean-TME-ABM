@@ -9,6 +9,7 @@ Before running the program, ensure you have the following installed on your syst
 - CMake (https://cmake.org/download/)
 - Make (Usually available by default on Unix-like systems)
 - C++ compiler (such as g++ for Linux or macOS, or Visual C++ for Windows)
+- A Python Interpreter 
 
 If you are using **Apple silicon**, please ensure you have `libomp` installed. You can install it via Homebrew:
 
@@ -28,10 +29,10 @@ $ git clone https://github.com/FinleyLabUSC/Boolean-TME-ABM.git
 $ cd <_APPLE or _UNIX_>
 $ cmake .
 $ make 
-
+$ pip install -r requirements.txt 
 ```
  
-3. This will build an executable runModel. To run, you can call ./runModel as follows
+3. This will build an executable runModel and install the necessary python packages to generate the parameter file. To run, you can call ./runModel as follows
 
 ```bash
 $ ./runModel <SAVE_FLD> <SAVE_IDX> <P_TYPE_STATE_TRANSITION> <DEATH_PROBABILITY_FACTOR> <KILL_PROBABILITY_FACTOR>
@@ -40,3 +41,6 @@ As an example:
 ```bash
 $ ./runModel modelPredictions 0 3 2 2
 ```
+
+## Notes
+As of now, the entirety of the build is not seeded and, as such, running the model with the same parameter set will produce different results. 

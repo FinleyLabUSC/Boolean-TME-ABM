@@ -4,5 +4,6 @@ CMakeCache.txt
 Makefile 
 runModel 
 CMakeFiles/ 
+.vscode/
 dev_test/ 
 ferroptosis_test_trigger_start/

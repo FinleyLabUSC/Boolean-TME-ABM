@@ -29,10 +29,7 @@ int countNumFiles(std::string dirPath){
 std::vector<std::string> get2dvecrow(std::vector<std::vector<std::string>>& vec, size_t row_idx){
     std::vector<std::string> res; 
     for(size_t i = 0; i < vec[row_idx].size(); ++i){
-        
         res.push_back(vec[row_idx][i]); 
     }
-
     return res; 
-
 }
