@@ -1,6 +1,6 @@
 ## Boolean-TME-ABM
 
-This repository contains a C++ program that builds using CMake and Make.
+AThis repository contains a C++ program that builds using CMake and Make.
 
 ## Prerequisites
 
