@@ -91,10 +91,10 @@ def update_plot_hour(hour_number):
     plt.tick_params(axis='x', which='both', bottom=False, top=False)
     plt.tick_params(axis='y', which='both', left=False, right=False)
     
-    plt.title(f'Hour {hour_number}')  # Set title
+    plt.title(f'Timepoint: {hour_number}')  # Set title
 
 # Create the animation
 fig = plt.figure(figsize=(6, 6))
-ani = FuncAnimation(fig, update_plot_hour, frames=range(1, 25), interval=500)  # Iterate over day_number from 1 to 30 with a 500ms interval
+ani = FuncAnimation(fig, update_plot_hour, frames=range(1, 16), interval=500)  # Iterate over day_number from 1 to 30 with a 500ms interval
 ani.save('ferroptosis_evolution_test.mp4')
 plt.show()

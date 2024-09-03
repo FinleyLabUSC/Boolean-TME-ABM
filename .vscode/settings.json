@@ -50,5 +50,6 @@
         "variant": "cpp",
         "vector": "cpp",
         "algorithm": "cpp"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }
