@@ -1,8 +1,13 @@
-## Boolean-TME-ABM
+## Boolean-TME-ABM: restructured
 
-This repository contains a C++ program that builds using CMake and Make.
+***NOTE:***
+This model is under re-construction to more strictly follow OOP principles. Because the folks working on this use Apple machines, the restructuring will be first completed with Apple Silicon compatability and then for UNIX compatability. 
+
+
 
 ## Prerequisites
+
+This repository contains a C++ program that builds using CMake and Make.
 
 Before running the program, ensure you have the following installed on your system:
 
@@ -35,7 +40,7 @@ $ pip install -r requirements.txt
 3. This will build an executable runModel and install the necessary python packages to generate the parameter file. To run, you can call ./runModel as follows
 
 ```bash
-$ ./runModel <SAVE_FLD> <SAVE_IDX> <P_TYPE_STATE_TRANSITION> <DEATH_PROBABILITY_FACTOR> <KILL_PROBABILITY_FACTOR>
+$ ./runModel <SAVE_FLD> <SAVE_DIR> <P_TYPE_STATE_TRANSITION> <DEATH_PROBABILITY_FACTOR> <KILL_PROBABILITY_FACTOR>
 ```
 As an example:
 ```bash
