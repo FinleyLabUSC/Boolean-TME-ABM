@@ -1,7 +1,7 @@
 ## Boolean-TME-ABM: restructured
 
 ***NOTE:***
-This model is under re-construction to more strictly follow OOP principles. Because the folks working on this use Apple machines, the restructuring will be first completed with Apple Silicon compatability and then for UNIX compatability. 
+AThis model is under re-construction to more strictly follow OOP principles. Because the folks working on this use Apple machines, the restructuring will be first completed with Apple Silicon compatability and then for UNIX compatability. 
 
 
 
