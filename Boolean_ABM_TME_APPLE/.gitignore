@@ -7,4 +7,5 @@ CMakeFiles
 Makefile
 .DS_Store/
 .vscode/
+hourly_plot/
 *.mp4

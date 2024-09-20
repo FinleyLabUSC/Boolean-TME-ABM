@@ -3,6 +3,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.animation import FuncAnimation
 import matplotlib.patches as patches
+import os 
+import random
+
+save_folder = 'hourly_plot'
+if not os.path.exists(save_folder):
+    os.makedirs(save_folder)
+
+SET_ID = random.randint(0, 101)
 
 
 # Function to update the plot for each day
@@ -50,10 +58,12 @@ def update_plot(day_number):
     
 def update_plot_hour(hour_number):
     plt.cla()  # Clear the previous plot
+
     
-    fp = f'dev_test/set_0/cellLists/day_15_hour_{hour_number}/cells.csv'
+    fp = f'dev_test/set_{SET_ID}/cellLists/day_15_hour_{hour_number}/cells.csv'
+
     if(hour_number == 1): 
-        fp = f'dev_test/set_0/cellLists/day_15/cells.csv'
+        fp = f'dev_test/set_{SET_ID}/cellLists/day_15/cells.csv'
 
     df = pd.read_csv(fp, header=None)
     df.columns = ["cellType", "x_loc", "y_loc","radius", "state", "pdl1_conc", "ferroptosis_sensitive"]
@@ -65,15 +75,15 @@ def update_plot_hour(hour_number):
 
     
     # Plot sensitive cells
-    ax = sns.scatterplot(data=sensitive_cells, x='x_loc', y='y_loc', color='cyan', alpha=0.9, s=1, legend=False)
+    ax = sns.scatterplot(data=sensitive_cells, x='x_loc', y='y_loc', color='cyan', alpha=1, s=1, legend=False)
     
     # Plot other cells
-    sns.scatterplot(data=other_cells, x='x_loc', y='y_loc', hue='ferroptosis_sensitive', alpha=0.4, s=1, palette='plasma', ax=ax,legend=False)
+    sns.scatterplot(data=other_cells, x='x_loc', y='y_loc', hue='ferroptosis_sensitive', alpha=0.9, s=1, palette='plasma', ax=ax,legend=False)
 
     # p = sns.scatterplot(data=df, x='x_loc', y='y_loc', hue='ferroptosis_sensitive', alpha=0.9, s=1, palette='plasma')
     # plt.get_legend().remove()
     scale_length = 1000  # Length of the scale bar in micrometers
-    scale_loc = (-3000, -3000)  # Location of the scale bar (bottom-left corner)
+    scale_loc = (-1500, -1500)  # Location of the scale bar (bottom-left corner)
     scale_width = 100  # Width of the scale bar
     scale_height = 20  # Height of the scale bar
     scale_label_offset = 50  # Offset for the scale label
@@ -81,8 +91,8 @@ def update_plot_hour(hour_number):
     plt.text(scale_loc[0] + scale_length / 2, scale_loc[1] - scale_label_offset-200, f'{scale_length} μm', color='white', ha='center', fontsize=10)
 
     # Add title and labels
-    plt.xlim(-3500, 3500)
-    plt.ylim(-3500, 3500)
+    plt.xlim(-2000, 2000)
+    plt.ylim(-2000, 2000)
     plt.xticks([])
     plt.yticks([])
     plt.gca().set_facecolor('black')
@@ -91,7 +101,11 @@ def update_plot_hour(hour_number):
     plt.tick_params(axis='x', which='both', bottom=False, top=False)
     plt.tick_params(axis='y', which='both', left=False, right=False)
     
-    plt.title(f'Timepoint: {hour_number}')  # Set title
+    plt.title(f'Timepoint: {hour_number}', fontsize=20, fontweight='bold')  # Set title
+
+    plt.savefig(f'{save_folder}/timepoint_{hour_number}.png', bbox_inches='tight', dpi=400)
+
+
 
 # Create the animation
 fig = plt.figure(figsize=(6, 6))

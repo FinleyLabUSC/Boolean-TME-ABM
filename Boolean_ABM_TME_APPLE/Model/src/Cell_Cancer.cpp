@@ -77,7 +77,7 @@ void Cell::evalFerroptosis(bool triggerWave){
                 ferroptosis_influence += c->ferroptosis_sensitive;     
             }
         }
-        if(ferroptosis_influence > influence_threshold && neighborHasFerroptosis){
+        if((ferroptosis_influence > influence_threshold) && neighborHasFerroptosis){
             ferroptosis_sensitive = -1; 
         }
     }
