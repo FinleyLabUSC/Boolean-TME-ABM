@@ -11,11 +11,11 @@
 
 
 
-class CellCancer: public Cell{
+class CancerCell: public Cell{
 public:
 
     // constructor 
-    CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
+    CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
 
     //functions
     std::array<double, 3> cancer_proliferate(double dt);
@@ -38,6 +38,7 @@ public:
     
 private:
     std::mt19937 mt;
+    double pdl1WhenExpressed;
 };
     
 

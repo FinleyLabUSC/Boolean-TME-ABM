@@ -1,6 +1,6 @@
-#include "CellMacrophage.h"
+#include "MacrophageCell.h"
 
-CellMacrophage::CellMacrophage(std::vector<std::vector<double> > &cellParams, size_t init_tstamp): Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()) {
+MacrophageCell::MacrophageCell(std::vector<std::vector<double> > &cellParams, size_t init_tstamp): Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()) {
     state = 0;
 
     mu = cellParams[0][3];
@@ -19,7 +19,7 @@ CellMacrophage::CellMacrophage(std::vector<std::vector<double> > &cellParams, si
     rmax = 1.5*radius*2;
 }
 
-void CellMacrophage::macrophage_differentiation(double dt) {
+void MacrophageCell::macrophage_differentiation(double dt) {
     /*
      * differentiate
      * probability of not differentiating is constant (before scaling)
@@ -55,7 +55,7 @@ void CellMacrophage::macrophage_differentiation(double dt) {
     }
 }
 
-void CellMacrophage::macrophage_age(double dt, size_t step_count) {
+void MacrophageCell::macrophage_age(double dt, size_t step_count) {
     /*
      * cells die based on a probability equal to 1/lifespan
      */
@@ -67,7 +67,7 @@ void CellMacrophage::macrophage_age(double dt, size_t step_count) {
     }
 }
 
-std::vector<double> CellMacrophage::macrophage_directInteractionProperties(int interactingState, size_t step_count) {
+std::vector<double> MacrophageCell::macrophage_directInteractionProperties(int interactingState, size_t step_count) {
     /*
      * returns the properties that go into Cell::directInteractions
      */
@@ -86,4 +86,18 @@ std::vector<double> CellMacrophage::macrophage_directInteractionProperties(int i
     }
     return {};
 }
+
+void MacrophageCell::set_kTr(double value) {kTr = value;}
+double MacrophageCell::get_kTr() {return kTr;}
+void MacrophageCell::set_kM1(double value) {kTr = value;}
+double MacrophageCell::get_kM1() {return kTr;}
+void MacrophageCell::set_kM2(double value) {kTr = value;}
+double MacrophageCell::get_kM2() {return kTr;}
+void MacrophageCell::set_plasticity(double value) {kTr = value;}
+double MacrophageCell::get_plasticity() {return kTr;}
+void MacrophageCell::set_pdl1WhenExpressed(double value) {pdl1WhenExpressed = value;}
+double MacrophageCell::get_pdl1WhenExpressed() {return pdl1WhenExpressed;}
+
+
+
 

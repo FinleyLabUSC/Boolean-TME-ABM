@@ -89,25 +89,11 @@ public:
 
 
     // interactions with other cells
-    double influenceRadius;
-    double pdl1;
-    double pdl1WhenExpressed;
-    std::array<double, 8> influences;
+    double influenceRadius; 
+    double pdl1;  
+    std::array<double, 8> influences; 
     std::array<double, 8> chemotaxVals;
     
-    double probTh;
-
-    // differentiation
-    double kTr;
-    double kM1;
-    double kM2;
-    double plasticity;
-
-    // T cell killing
-    double killProb;
-    double baseKillProb;
-    double infScale;
-    std::vector<std::string> t_cell_phenotype_Trajectory; 
 
     // identification
     int id;

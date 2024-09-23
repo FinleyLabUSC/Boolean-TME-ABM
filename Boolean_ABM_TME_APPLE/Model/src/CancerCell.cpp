@@ -1,11 +1,11 @@
 // CELL BEHAVIOR FUNCTIONS
-#include "CellCancer.h"
+#include "CancerCell.h"
 
 
 
 // CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp) : Cell::Cell(args){ 
 
-CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp): Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()){
+CancerCell::CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp): Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()){
     state = 3;
     canProlif = true;
 
@@ -26,7 +26,7 @@ CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init
     
 }
 
-void CellCancer::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, double kp, double dt) {
+void CancerCell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, double kp, double dt) {
     /*
      * die from CTL based on a probability
      * contact required
@@ -41,7 +41,7 @@ void CellCancer::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRad
     }
 }
 
-void CellCancer::cancer_gainPDL1(double dt) {
+void CancerCell::cancer_gainPDL1(double dt) {
     /*
      * shift pdl1 value based on influence from CTL and Th
      *  ifn-g is shown to increase PD-L1 expression
@@ -57,7 +57,7 @@ void CellCancer::cancer_gainPDL1(double dt) {
     }
 }
 
-std::array<double, 3> CellCancer::cancer_proliferate(double dt) {
+std::array<double, 3> CancerCell::cancer_proliferate(double dt) {
     // positions 0 and 1 are cell location
     // position 2 is boolean didProliferate?
     if(!canProlif){return {0,0,0};}
@@ -77,7 +77,7 @@ std::array<double, 3> CellCancer::cancer_proliferate(double dt) {
     }
 }
 
-void CellCancer::cancer_prolifState() {
+void CancerCell::cancer_prolifState() {
     /*
      * cancer cells and CD8 can proliferate
      * right now, CD8 proliferation prob is set to 0, however leaving it in for future changes
@@ -99,7 +99,7 @@ void CellCancer::cancer_prolifState() {
     }
 }
 
-void CellCancer::cancer_age(double dt, size_t step_count) {
+void CancerCell::cancer_age(double dt, size_t step_count) {
     /*
      * cells die based on a probability equal to 1/lifespan
      */
@@ -111,12 +111,12 @@ void CellCancer::cancer_age(double dt, size_t step_count) {
     }
 }
 
-void CellCancer::cancer_indirectInteractions(double tstep) {
+void CancerCell::cancer_indirectInteractions(double tstep) {
     cancer_gainPDL1(tstep);
     return;
 }
 
-void CellCancer::cancer_directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep) {
+void CancerCell::cancer_directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep) {
     if(interactingState == 6){
         // interactionProperties = {radius, killProb}
         cancer_dieFromCD8(interactingX, interactionProperties[0], interactionProperties[1], tstep);
@@ -124,7 +124,7 @@ void CellCancer::cancer_directInteractions(int interactingState, std::array<doub
         return;
 }
 
-std::vector<double> CellCancer::cancer_directInteractionProperties(int interactingState, size_t step_count) {
+std::vector<double> CancerCell::cancer_directInteractionProperties(int interactingState, size_t step_count) {
 
     /*
      * returns the properties that go into Cell::directInteractions
