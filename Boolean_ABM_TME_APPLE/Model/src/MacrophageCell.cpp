@@ -2,7 +2,7 @@
 
 MacrophageCell::MacrophageCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
           int cellType)
-    : Cell(Cell(loc, idx, cellParams, init_tstamp)){
+    : Cell(loc, idx, cellParams, init_tstamp){
     state = 0;
 
     mu = cellParams[0][3];
