@@ -13,7 +13,8 @@ class CD8Cell: public Cell{
 public:
 
     //constructor
-    CD8Cell(std::vector<std::vector<double>> &cellParams, std::vector<std::string> phenotypeTrajectory, size_t init_tstamp);
+    CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+            int cellType,std::vector<std::string> phenotypeTrajectory);
 
     //variables
     int pTypeStateTransition; // for CD8+ T cells only

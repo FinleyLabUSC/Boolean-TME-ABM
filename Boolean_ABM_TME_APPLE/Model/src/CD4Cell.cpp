@@ -1,6 +1,12 @@
 #include "CD4Cell.h"
+#include "Cell.h"
 
-CD4Cell::CD4Cell(std::vector<std::vector<double> > &cellParams, size_t init_tstamp): Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()){
+CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+            int cellType)
+            :Cell(loc, idx, cellParams, init_tstamp)
+            {
+    
+    type = cellType; 
     state = 4;
 
     mu = cellParams[0][1];

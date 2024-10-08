@@ -16,8 +16,7 @@ public:
      */
 
     // initialization
-    Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType,
-    std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp=0);
+    Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
    
     // force functions
     std::array<double, 2> attractiveForce(std::array<double, 2> dx, double otherRadius);

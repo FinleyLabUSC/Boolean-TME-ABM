@@ -1,4 +1,6 @@
 #include "Environment.h"
+#include "Cell.h"
+
 
 void Environment::loadParams() {
     std::ifstream dataCP(saveDir+"/params/cellParams.csv");

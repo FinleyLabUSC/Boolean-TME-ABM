@@ -21,13 +21,12 @@
  */
 
 // INITIALIZE CELL TYPE
-Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()) {
+Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
     /*
      * initialize all parameters to 0
      * set parameters based on cellType
      */
 
-    type = cellType;
 
     x = loc;
     id = idx;
@@ -49,25 +48,25 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
     migrationBias = 0;
     influenceRadius = 0;
     pdl1 = 0;
-    pdl1WhenExpressed = 0;
+    // pdl1WhenExpressed = 0;
     for(int i=0; i<influences.size(); ++i){
         influences[i] = 0;
     }
     for(int i=0; i<chemotaxVals.size(); ++i){
         chemotaxVals[i] = 0;
     }
-    kTr = 0;
-    kM1 = 0;
-    kM2 = 0;
-    plasticity = 0;
-    killProb = 0;
-    baseKillProb = 0;
-    infScale = 0;
+    // kTr = 0;
+    // kM1 = 0;
+    // kM2 = 0;
+    // plasticity = 0;
+    // killProb = 0;
+    // baseKillProb = 0;
+    // infScale = 0;
 
     state = 0;
 
     // for influence distance, assume a soft-cutoff where p(distance) = probTh
-    probTh = 0.01;
+    // probTh = 0.01;
 }
 
 // FORCE FUNCTIONS
@@ -329,7 +328,7 @@ double Cell::calcInfDistance(double dist, double xth) {
     /*
      * calculate influence using an exponential decay based on distance from cell center
      */
-    double alpha = -log2(probTh);
+    double alpha = -log2(1);//probTh
     double lambda = alpha*0.693/xth;
 
     return exp(-lambda*dist);

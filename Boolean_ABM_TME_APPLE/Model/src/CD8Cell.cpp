@@ -1,6 +1,9 @@
 #include "CD8Cell.h"
 
-CD8Cell::CD8Cell(std::vector<std::vector<double> > &cellParams, std::vector<std::string> phenotypeTrajectory, size_t init_tstamp) : Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType, std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp): mt((std::random_device())()) {
+CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+          int cellType,std::vector<std::string> phenotypeTrajectory) 
+    : Cell(loc, idx, cellParams, init_tstamp)
+    {
     state = 6;
 
     mu = cellParams[0][2];

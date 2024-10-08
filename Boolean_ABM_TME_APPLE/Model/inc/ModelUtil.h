@@ -14,7 +14,7 @@ int countNumFiles(std::string dirPath);
 std::vector<std::string> get2dvecrow(std::vector<std::vector<std::string>>& vec, size_t row_idx); 
 
 
-#endif /* RANDOMUTIL_H */x
+#endif /* RANDOMUTIL_H */
 
 
 

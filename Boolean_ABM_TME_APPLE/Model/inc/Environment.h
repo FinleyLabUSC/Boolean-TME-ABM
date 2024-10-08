@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <random>
 #include "Cell.h"
+#include "CD4Cell.h"
+#include "CD8Cell.h"
+#include "MacrophageCell.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
