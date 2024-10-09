@@ -27,7 +27,6 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
      * set parameters based on cellType
      */
 
-
     x = loc;
     id = idx;
 
@@ -68,9 +67,13 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
     // for influence distance, assume a soft-cutoff where p(distance) = probTh
     // probTh = 0.01;
 }
+/*
+FORCE FUNCTIONS
+from Osborne 2017
 
-// FORCE FUNCTIONS
-// from Osborne 2017
+cells are modeled using a center-based approach which considers each cell as a point and radius 
+(used to calculate physical force between cells)
+*/
 std::array<double, 2> Cell::attractiveForce(std::array<double, 2> dx, double otherRadius) {
     double dxNorm = calcNorm(dx);
     std::array<double, 2> dxUnit = {dx[0]/dxNorm, dx[1]/dxNorm};

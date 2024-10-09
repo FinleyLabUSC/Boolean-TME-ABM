@@ -15,7 +15,8 @@
 #include <vector>
 #include <filesystem> 
 #include <array>
-#include "/opt/homebrew/opt/libomp/include/omp.h"
+// #include "/opt/homebrew/opt/libomp/include/omp.h"
+#include "/usr/local/opt/libomp/include/omp.h"
 
 
 

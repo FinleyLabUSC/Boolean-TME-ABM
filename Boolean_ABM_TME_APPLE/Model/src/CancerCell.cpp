@@ -3,6 +3,7 @@
 #include "Cell.h"
 
 
+//Cancer cell constructor
 
 // CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp) : Cell::Cell(args){ 
 
@@ -33,6 +34,7 @@ void CancerCell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRad
     /*
      * die from CTL based on a probability
      * contact required
+     * cell is removed from simulation when it dies
      */
     if(type != 0){return;}
 
@@ -46,8 +48,9 @@ void CancerCell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRad
 
 void CancerCell::cancer_gainPDL1(double dt) {
     /*
-     * shift pdl1 value based on influence from CTL and Th
-     *  ifn-g is shown to increase PD-L1 expression
+     * shift pdl1 value based on influence from CTL and Th (CD4þ helper cells, M2 macrophages)
+     * IFN-c is shown to increase PD-L1 expression (via t cell secretion)
+     * after proliferation ->  daughter cells inherit the PD-L1 expression of the mother
      */
     if(type != 0 || pdl1 > 0.0){return;}
 
@@ -61,6 +64,11 @@ void CancerCell::cancer_gainPDL1(double dt) {
 }
 
 std::array<double, 3> CancerCell::cancer_proliferate(double dt) {
+    /*
+    proliferation is modeled as probabilities of occuring at each time point
+    if there is too much overlap between cells than proliferation is stopped untill overlap decreases
+    daughter cell of proliferating cell is placed at a dist of the cell radius away from the mother cell at a randomly selected angle
+    */
     // positions 0 and 1 are cell location
     // position 2 is boolean didProliferate?
     if(!canProlif){return {0,0,0};}
@@ -115,11 +123,17 @@ void CancerCell::cancer_age(double dt, size_t step_count) {
 }
 
 void CancerCell::cancer_indirectInteractions(double tstep) {
+    /*
+    PDL is gained if parameters are correct
+    */
     cancer_gainPDL1(tstep);
     return;
 }
 
 void CancerCell::cancer_directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep) {
+    /*
+    cell will die if parameters are correct
+    */
     if(interactingState == 6){
         // interactionProperties = {radius, killProb}
         cancer_dieFromCD8(interactingX, interactionProperties[0], interactionProperties[1], tstep);
