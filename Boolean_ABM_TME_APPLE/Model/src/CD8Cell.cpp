@@ -1,5 +1,6 @@
 #include "CD8Cell.h"
 
+//CD8 Cell Constructor 
 CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
           int cellType,std::vector<std::string> phenotypeTrajectory) 
     : Cell(loc, idx, cellParams, init_tstamp)
@@ -26,6 +27,11 @@ CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
     init_time = init_tstamp;
 }
 
+
+/*
+increased pdl1 expression on cancer cells promotes cd8 cells to go to exhausted state
+in exhaust state - reduced killing ability and higher probability of dying
+*/
 void CD8Cell::cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadius, double otherpdl1, double dt) {
     // inhibition via direct contact
 
@@ -42,6 +48,11 @@ void CD8Cell::cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadiu
     }
 }
 
+/*
+positive influence of M1 macrophages and T helper cells on killin gability 
+negative influence of M2 macrophages and Treg cells on killing ability
+baseline kill prob is determined by wheather cd8 is naive, exhuasted, or pro memory state
+*/
 void CD8Cell::cd8_setKillProb(){
     // set kill prob based on influence
     // essentially effects of cytokines

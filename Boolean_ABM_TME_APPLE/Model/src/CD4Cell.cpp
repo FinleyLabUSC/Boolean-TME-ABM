@@ -24,6 +24,11 @@ CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
     rmax = 1.5*radius*2;
 }
 
+/*
+M2 cells promote differentiation of cd4 into regulatory state (and also promotes M0 into M2)
+CD4 in this model comes in as helper state and can be converted to regulatory state based on enviromental factors ^^
+
+*/
 void CD4Cell::cd4_differentiation(double dt) {
     if(state != 4){return;}
 
@@ -48,6 +53,11 @@ void CD4Cell::cd4_age(double dt, size_t step_count) {
     }
 }
 
+
+/*
+In the helper state, CD4+ cells promote M0 differentiation into the M1 state 
+As regulatory cells, they express CTLA-4 (has same function as PD-L1) and promote M0 differentiation into the M2 state 
+*/
 std::vector<double> CD4Cell::cd4_directInteractionProperties(int interactingState, size_t step_count) {
 
     /*
