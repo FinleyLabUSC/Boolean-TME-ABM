@@ -23,7 +23,8 @@ kp = float(sys.argv[5])
 print("starting simulation with phenotype state transition: {}, death probability factor: {}, kill probability factor: {}".format(pST, dp, kp) )
 
 cancerPDL1_m = 0.01 
-tcellMigBias = 0.076
+cd4_tcellMigBias = 0.074
+cd8_tcellMigBias = 0.076
 cd4Diff = 0.132
 cd4PDL1 = 0.139
 macMigBias = 0.123
@@ -37,11 +38,19 @@ recDelay = 2.85
 necroticGrowth = 0 #params[12]
 necrosisLimit = 940.3
 
+macMigBias_inTumor = 0.067
+cd4_tCellMigBias_inTumor = 0.068
+cd8_tCellMigBias_inTumor = 0.022
+
+macMigSpeed_inTumor = 13.3
+cd4_tCellMigSpeed_inTumor = 60.2
+cd8_tCellMigSpeed_inTumor = 51
+
 #############################
 # ------------------------- #
 #############################
 
-cellParams = np.zeros((13, 4))
+cellParams = np.zeros((15, 4))
 
 # cancer params
 cellParams[0, 0] = m  # mu
@@ -65,8 +74,10 @@ cellParams[5, 1] = 1/(24.0*3.0) # lifespan (days) # Gong 2017 (for CD8 cells)
 cellParams[6, 1] = 90.0  # migration speed base um/hr
 cellParams[7, 1] = cd4Diff  # differentiation to Treg
 cellParams[8, 1] = 40.0  # influence distance
-cellParams[9, 1] = tcellMigBias  # migration bias base
+cellParams[9, 1] = cd4_tcellMigBias  # migration bias base
 cellParams[10, 1] = cd4PDL1  # pdl1 (when Treg)
+cellParams[11, 1] = cd4_tCellMigBias_inTumor
+cellParams[12, 1] = cd4_tCellMigSpeed_inTumor
 
 # cd8 params
 cellParams[0, 2] = m  # mu
@@ -79,7 +90,7 @@ cellParams[6, 2] = 90.0  # migration speed um/hr | https://onlinelibrary.wiley.c
 cellParams[7, 2] = 0.1*kp # killProb Gong 2017 (other works use very different probabilities
 cellParams[8, 2] = 2.0  # infScale -> arbitrarily set
 cellParams[9, 2] = 40.0  # influence distance
-cellParams[10, 2] = tcellMigBias  # migration bias base
+cellParams[10, 2] = cd8_tcellMigBias  # migration bias base
 cellParams[11, 2] = 0.053  # proliferation prob
 
 """
@@ -88,6 +99,8 @@ as articulated by the embedded Gene Regulatory Network. A higher value results i
 This value must be an integer. A recommended range is 1-10 but should not exceed the length of the smallest trajectory
 """
 cellParams[12, 2] = pST
+cellParams[13, 2] = cd8_tCellMigBias_inTumor
+cellParams[14, 2] = cd8_tCellMigSpeed_inTumor
 
 # macrophage params
 cellParams[0, 3] = m  # mu
@@ -102,6 +115,9 @@ cellParams[8, 3] = macM2  # kM2
 cellParams[9, 3] = 40.0  # influence distance
 cellParams[10, 3] = macMigBias  # migration bias
 cellParams[11, 3] = macPDL1  # pdl1
+cellParams[12, 3] = macMigBias_inTumor
+cellParams[13, 3] = macMigSpeed_inTumor
+
 
 recParams = np.zeros((5, 1))
 recParams[0] = cd8RecRate # cd8RecRate

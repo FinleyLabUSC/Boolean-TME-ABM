@@ -41,7 +41,7 @@ public:
     void inherit(std::vector<double> properties);
     std::vector<double> inheritanceProperties();
     void age(double dt, size_t step_count);
-    void migrate(double dt, std::array<double, 2> tumorCenter);
+    void migrate(double dt, std::array<double, 2> tumorCenter, double tumorRadius);
     void indirectInteractions(double tstep, size_t step_count);
     void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
     std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
@@ -105,7 +105,9 @@ public:
 
     // migration
     double migrationSpeed;
+    double migrationSpeed_inTumor; 
     double migrationBias;
+    double migrationBias_inTumor; 
 
     // cancer properties
     double pdl1Shift;
