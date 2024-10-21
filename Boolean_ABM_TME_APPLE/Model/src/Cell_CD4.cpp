@@ -15,6 +15,7 @@ void Cell::initializeCD4Cell(std::vector<std::vector<double> > &cellParams, size
     migrationBias = cellParams[9][1];
     pdl1WhenExpressed = cellParams[10][1];
     migrationBias_inTumor = cellParams[11][1]; 
+    migrationSpeed_inTumor = cellParams[12][1]; 
 
     rmax = 1.5*radius*2;
 }

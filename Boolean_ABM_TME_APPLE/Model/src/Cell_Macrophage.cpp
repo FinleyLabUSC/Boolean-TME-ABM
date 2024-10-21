@@ -16,6 +16,7 @@ void Cell::initializeMacrophageCell(std::vector<std::vector<double> > &cellParam
     migrationBias = cellParams[10][3];
     pdl1WhenExpressed = cellParams[11][3];
     migrationBias_inTumor = cellParams[12][3]; 
+    migrationSpeed_inTumor = cellParams[13][3]; 
 
     rmax = 1.5*radius*2;
 }

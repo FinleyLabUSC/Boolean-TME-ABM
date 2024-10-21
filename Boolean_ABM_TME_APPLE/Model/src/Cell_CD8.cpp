@@ -18,6 +18,7 @@ void Cell::initializeCD8Cell(std::vector<std::vector<double> > &cellParams, std:
     divProb_base = cellParams[11][2];
     pTypeStateTransition = cellParams[12][2]; 
     migrationBias_inTumor = cellParams[13][2]; 
+    migrationSpeed_inTumor = cellParams[14][2]; 
 
     rmax = 1.5*radius*2;
 
