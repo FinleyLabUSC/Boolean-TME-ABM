@@ -6,5 +6,6 @@ runModel
 CMakeFiles/ 
 .vscode/
 dev_test/ 
+build/
 ferroptosis_test_trigger_start/
 Boolean_ABM_TME_APPLE/.DS_Store
