@@ -1,5 +1,6 @@
 #include "MacrophageCell.h"
 
+//Macrophage Cell constructor 
 MacrophageCell::MacrophageCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
           int cellType)
     : Cell(loc, idx, cellParams, init_tstamp){
@@ -23,7 +24,9 @@ MacrophageCell::MacrophageCell(std::vector<std::vector<double>> &cellParams, siz
 
 void MacrophageCell::macrophage_differentiation(double dt) {
     /*
-     * differentiate
+     * differentiate into M1 or M2 or remain as M0 depending on enviromental factors
+     * can re differentiate at each time step
+     * macrophages have a certian size
      * probability of not differentiating is constant (before scaling)
      *  the closer a macrophage is to other cells, the more likely to differentiate
      * inf-g secreting cells (CTL and Th) promote M1
