@@ -284,7 +284,7 @@ void Cell::age(double dt, size_t step_count) {
     }
 }
 
-void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
+void Cell::migrate(double dt, std::array<double, 2> tumorCenter, double tumorRadius){
     /*
      * biased random-walk towards tumor center
      *
@@ -318,16 +318,35 @@ void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
     dx_direction = unitVector(dx_direction);
     dx_random = unitVector(dx_random);
     std::array<double, 2> dx_movement = {0,0};
-    for(int i=0; i<2; ++i){
-        dx_movement[i] = migrationBias*dx_direction[i] + (1- migrationBias)*dx_random[i];
-    }
-    dx_movement = unitVector(dx_movement);
 
-    for(int i=0; i<x.size(); ++i){
-        x[i] += dt*migrationSpeed*dx_movement[i];
-        if(std::isnan(x[i])){
-            throw std::runtime_error("migration NaN");
+    if(calcDistance(tumorCenter) <= tumorRadius){
+        //in tumor
+        for(int i=0; i<2; ++i){
+            dx_movement[i] = migrationBias_inTumor*dx_direction[i] + (1- migrationBias_inTumor)*dx_random[i];
         }
+        dx_movement = unitVector(dx_movement);
+            for(int i=0; i<x.size(); ++i){
+                x[i] += dt*migrationSpeed_inTumor*dx_movement[i];
+                if(std::isnan(x[i])){
+                    throw std::runtime_error("migration NaN");
+            }
+        }
+    }
+    else{
+        //out of tumor
+        for(int i=0; i<2; ++i){
+            dx_movement[i] = migrationBias*dx_direction[i] + (1- migrationBias)*dx_random[i];
+        }
+        dx_movement = unitVector(dx_movement);
+            for(int i=0; i<x.size(); ++i){
+                x[i] += dt*migrationSpeed*dx_movement[i];
+                if(std::isnan(x[i])){
+                    throw std::runtime_error("migration NaN");
+            }
+        
+        }
+
+
     }
 }
 
@@ -419,7 +438,7 @@ std::vector<double> Cell::inheritanceProperties() {
     return {};
 }
 
-void Cell::indirectInteractions(double tstep) {
+void Cell::indirectInteractions(double tstep, size_t step_count) {
     /*
      * after determining total influences on the cell, run the indirect interaction functions
      */
@@ -444,7 +463,7 @@ void Cell::indirectInteractions(double tstep) {
         return;
     } else if (state == 6){
         // CD8 active
-        cd8_setKillProb();
+        cd8_setKillProb(step_count);
         return;
     } else if (state == 7){
         // CD8 suppressed
