@@ -22,6 +22,31 @@ MacrophageCell::MacrophageCell(std::vector<std::vector<double>> &cellParams, siz
     rmax = 1.5*radius*2;
 }
 
+std::array<double, 3> MacrophageCell::macrophage_proliferate(double dt) {
+    /*
+    proliferation is modeled as probabilities of occuring at each time point
+    if there is too much overlap between cells than proliferation is stopped untill overlap decreases
+    daughter cell of proliferating cell is placed at a dist of the cell radius away from the mother cell at a randomly selected angle
+    */
+    // positions 0 and 1 are cell location
+    // position 2 is boolean didProliferate?
+    if(!canProlif){return {0,0,0};}
+
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
+    if(dis(mt) < divProb){
+        // place daughter cell a random angle away from the mother cell at a distance of radius
+        std::normal_distribution<double> rd(0.0, 1.0);
+        std::array<double, 2> dx = {rd(mt),
+                                      rd(mt)};
+        double norm = calcNorm(dx);
+        return{radius*(dx[0]/norm)+x[0],
+               radius*(dx[1]/norm)+x[1],
+               1};
+    } else{
+        return {0,0,0};
+    }
+}
+
 void MacrophageCell::macrophage_differentiation(double dt) {
     /*
      * differentiate into M1 or M2 or remain as M0 depending on enviromental factors

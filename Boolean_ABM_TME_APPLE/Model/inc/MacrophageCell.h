@@ -18,6 +18,7 @@ public:
           int cellType);
 
     //functions
+    std::array<double, 3> macrophage_proliferate(double dt);
     void macrophage_differentiation(double dt);
     void macrophage_age(double dt, size_t step_count);
     std::vector<double> macrophage_directInteractionProperties(int interactingState, size_t step_count);

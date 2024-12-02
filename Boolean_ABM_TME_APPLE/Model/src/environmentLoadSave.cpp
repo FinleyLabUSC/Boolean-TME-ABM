@@ -57,10 +57,18 @@ void Environment::save(double tstep, double tstamp) {
     for(auto &cell : cell_list){
         //logging cell location, type and state 
         if(cell.type == 3){ //cd8 t cell
-            size_t idx = (tstamp - cell.init_time)*cell.pTypeStateTransition; 
+
+            //type check with an if statement
+
+            
+
+
+
+            size_t idx = (tstamp - cell.init_time)*cd8cell.pTypeStateTransition; 
             if(idx > cell.t_cell_phenotype_Trajectory.size() - 1){
                 //we are outside of the array and want to get the last 
-                std::string pType = cell.t_cell_phenotype_Trajectory[cell.t_cell_phenotype_Trajectory.size() - 1]; 
+                std::string pType = cd8cell.t_cell_phenotype_Trajectory[cd8cell.t_cell_phenotype_Trajectory.size() - 1]; 
+                // call the getter for phenotype trajectory
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
@@ -69,7 +77,7 @@ void Environment::save(double tstep, double tstamp) {
                     << cell.pdl1 << std::endl;
             }
             else{
-                std::string pType = cell.t_cell_phenotype_Trajectory[idx-1]; 
+                std::string pType = cd8cell.t_cell_phenotype_Trajectory[idx-1]; 
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
