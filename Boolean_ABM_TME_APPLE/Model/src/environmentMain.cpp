@@ -162,11 +162,18 @@ void Environment::simulate(double tstep) {
         }
 
         int numC = 0;
+
+        for (auto &c: cancer_list) {
+            numC++;
+        }
+        /*
         for (auto &c: cell_list) {
             if (c.type == 0) {
                 numC++;
             }
         }
+        */
+       
         if (numC == 0) {
             save(tstep, steps*tstep);
             break;

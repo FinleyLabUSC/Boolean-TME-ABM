@@ -4,6 +4,9 @@ project(CB_base)
 set(CMAKE_CXX_COMPILER "clang++")
 
 
+find_package( Boost REQUIRED COMPONENTS program_options regex )
+include_directories( ${Boost_INCLUDE_DIRS} )
+
 
 if(APPLE)
     set(CMAKE_C_COMPILER clang)
@@ -25,9 +28,10 @@ endif()
 
 include_directories(Model/inc)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -g -O3 ${OpenMP_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++17 -g -O3 ${OpenMP_CXX_FLAGS}")
 
 
 file(GLOB SOURCES "Model/src/*.cpp")
 
 add_executable(runModel ${SOURCES})
+target_link_libraries(runModel ${Boost_LIBRARIES})

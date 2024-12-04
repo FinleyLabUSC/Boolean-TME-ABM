@@ -1,9 +1,9 @@
 #include "CD4Cell.h"
 #include "Cell.h"
 
-CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType)
-            :Cell(loc, idx, cellParams, init_tstamp)
+            :Cell(loc, cellParams, init_tstamp)
             {
     
     type = cellType; 
@@ -24,6 +24,36 @@ CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
     rmax = 1.5*radius*2;
 }
 
+std::array<double, 3> CD4Cell::cd4_proliferate(double dt) {
+    /*
+    proliferation is modeled as probabilities of occuring at each time point
+    if there is too much overlap between cells than proliferation is stopped untill overlap decreases
+    daughter cell of proliferating cell is placed at a dist of the cell radius away from the mother cell at a randomly selected angle
+    */
+    // positions 0 and 1 are cell location
+    // position 2 is boolean didProliferate?
+    if(!canProlif){return {0,0,0};}
+
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
+    if(dis(mt) < divProb){
+        // place daughter cell a random angle away from the mother cell at a distance of radius
+        std::normal_distribution<double> rd(0.0, 1.0);
+        std::array<double, 2> dx = {rd(mt),
+                                      rd(mt)};
+        double norm = calcNorm(dx);
+        return{radius*(dx[0]/norm)+x[0],
+               radius*(dx[1]/norm)+x[1],
+               1};
+    } else{
+        return {0,0,0};
+    }
+}
+
+/*
+M2 cells promote differentiation of cd4 into regulatory state (and also promotes M0 into M2)
+CD4 in this model comes in as helper state and can be converted to regulatory state based on enviromental factors ^^
+
+*/
 void CD4Cell::cd4_differentiation(double dt) {
     if(state != 4){return;}
 
@@ -48,6 +78,11 @@ void CD4Cell::cd4_age(double dt, size_t step_count) {
     }
 }
 
+
+/*
+In the helper state, CD4+ cells promote M0 differentiation into the M1 state 
+As regulatory cells, they express CTLA-4 (has same function as PD-L1) and promote M0 differentiation into the M2 state 
+*/
 std::vector<double> CD4Cell::cd4_directInteractionProperties(int interactingState, size_t step_count) {
 
     /*

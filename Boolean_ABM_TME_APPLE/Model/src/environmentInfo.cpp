@@ -6,6 +6,23 @@ void Environment::printStep(double time) {
     int numT4 = 0;
     int numC = 0;
 
+    for(auto &macrophage : macrophage_list){
+        numM++;
+    }
+
+    for(auto &cd8 : cd8_list){
+        numT8++;
+    }
+
+    for(auto &cd4 : cd4_list){
+        numT4++;
+    }
+
+    for(auto &cancer : cancer_list){
+        numC++;
+    }
+
+    /*
     for(auto &cell : cell_list){
         if(cell.type == 1){
             numM++;
@@ -17,6 +34,8 @@ void Environment::printStep(double time) {
             numC++;
         }
     }
+    */
+
     std::cout << "Time: " << (time/24) << std::endl;
 }
 
@@ -25,6 +44,19 @@ void Environment::updateTimeSeries() {
     int numT4 = 0;
     int numC = 0;
 
+    for(auto &cell : cd8_list){
+        numT8++;
+    }
+
+    for(auto &cell : cd4_list){
+        numT4++;
+    }
+
+    for(auto &cell : cancer_list){
+        numC++;
+    }
+
+    /*
     for(auto &cell : cell_list){
         if(cell.type == 3){
             numT8++;
@@ -34,6 +66,7 @@ void Environment::updateTimeSeries() {
             numC++;
         }
     }
+    */
 
     cancerTS.push_back(numC);
     cd8TS.push_back(numT8);
@@ -42,6 +75,14 @@ void Environment::updateTimeSeries() {
     int m0 = 0;
     int m1 = 0;
     int m2 = 0;
+
+    for(auto &m : macrophage_list){
+        if (m.state == 0) { m0++; }
+        if (m.state == 1) { m1++; }
+        if (m.state == 2) { m2++; }
+    }
+
+    /*
     for(auto &c : cell_list){
         if(c.type == 1) {
             if (c.state == 0) { m0++; }
@@ -49,6 +90,7 @@ void Environment::updateTimeSeries() {
             if (c.state == 2) { m2++; }
         }
     }
+    */
 
     m0TS.push_back(m0);
     m1TS.push_back(m1);

@@ -13,7 +13,7 @@ class CD8Cell: public Cell{
 public:
 
     //constructor
-    CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+    CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType,std::vector<std::string> phenotypeTrajectory);
 
     //variables
@@ -21,6 +21,10 @@ public:
 
     // functions
     // CD8 specific
+
+    std::array<double, 3> cd8_proliferate(double dt);
+    void cd8_prolifState();
+    
     void cd8_addChemotaxis(std::array<double, 2> otherX, double otherInfluence, int otherType);
     void cd8_setKillProb();
     void cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadius, double otherpdl1, double dt);
@@ -40,6 +44,8 @@ public:
 
     void set_t_cell_phenotype_Trajectory(std::vector<std::string> value);
     std::vector<std::string> get_t_cell_phenotype_Trajectory();
+
+    
 
     
 

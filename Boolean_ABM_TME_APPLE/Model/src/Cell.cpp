@@ -21,15 +21,14 @@
  */
 
 // INITIALIZE CELL TYPE
-Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
+Cell::Cell(std::array<double, 2> loc, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
     /*
      * initialize all parameters to 0
      * set parameters based on cellType
      */
 
-
     x = loc;
-    id = idx;
+    idx = boost::uuids::random_generator()(); // Generate a unique UUID
 
     radius = 0;
     compressed = false;
@@ -68,9 +67,13 @@ Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> 
     // for influence distance, assume a soft-cutoff where p(distance) = probTh
     // probTh = 0.01;
 }
+/*
+FORCE FUNCTIONS
+from Osborne 2017
 
-// FORCE FUNCTIONS
-// from Osborne 2017
+cells are modeled using a center-based approach which considers each cell as a point and radius 
+(used to calculate physical force between cells)
+*/
 std::array<double, 2> Cell::attractiveForce(std::array<double, 2> dx, double otherRadius) {
     double dxNorm = calcNorm(dx);
     std::array<double, 2> dxUnit = {dx[0]/dxNorm, dx[1]/dxNorm};
@@ -346,3 +349,5 @@ std::array<double, 2> Cell::unitVector(std::array<double, 2> v) {
 void Cell::updateID(int idx) {
     id = idx;
 }
+
+boost::uuids::uuid Cell::getId() const {return idx;}

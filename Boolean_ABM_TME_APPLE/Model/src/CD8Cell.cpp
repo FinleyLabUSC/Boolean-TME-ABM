@@ -1,8 +1,9 @@
 #include "CD8Cell.h"
 
-CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+//CD8 Cell Constructor 
+CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
           int cellType,std::vector<std::string> phenotypeTrajectory) 
-    : Cell(loc, idx, cellParams, init_tstamp)
+    : Cell(loc, cellParams, init_tstamp)
     {
     state = 6;
 
@@ -26,6 +27,58 @@ CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
     init_time = init_tstamp;
 }
 
+std::array<double, 3> CD8Cell::cd8_proliferate(double dt) {
+    /*
+    proliferation is modeled as probabilities of occuring at each time point
+    if there is too much overlap between cells than proliferation is stopped untill overlap decreases
+    daughter cell of proliferating cell is placed at a dist of the cell radius away from the mother cell at a randomly selected angle
+    */
+    // positions 0 and 1 are cell location
+    // position 2 is boolean didProliferate?
+    if(!canProlif){return {0,0,0};}
+
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
+    if(dis(mt) < divProb){
+        // place daughter cell a random angle away from the mother cell at a distance of radius
+        std::normal_distribution<double> rd(0.0, 1.0);
+        std::array<double, 2> dx = {rd(mt),
+                                      rd(mt)};
+        double norm = calcNorm(dx);
+        return{radius*(dx[0]/norm)+x[0],
+               radius*(dx[1]/norm)+x[1],
+               1};
+    } else{
+        return {0,0,0};
+    }
+}
+
+void CD8Cell::cd8_prolifState() {
+    /*
+     * cancer cells and CD8 can proliferate
+     * right now, CD8 proliferation prob is set to 0, however leaving it in for future changes
+     */
+    if(type == 0){
+        canProlif = !(state == -1 || compressed);
+    } else if(type == 3){
+        // CTLs -> presence of Th promotes their proliferation, M2 and Treg decrease it
+        // assume CTLs need IL-2 from Th to proliferate
+        canProlif = !(state == 7 || compressed);
+        double posInfluence = influences[4];
+        double negInfluence = 1 - (1 - influences[2])*(1 - influences[5]);
+
+        double scale = posInfluence - negInfluence;
+        //divProb = divProb_base*pow(infScale, scale);
+        divProb = scale*divProb_base;
+    } else {
+        canProlif = false;
+    }
+}
+
+
+/*
+increased pdl1 expression on cancer cells promotes cd8 cells to go to exhausted state
+in exhaust state - reduced killing ability and higher probability of dying
+*/
 void CD8Cell::cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadius, double otherpdl1, double dt) {
     // inhibition via direct contact
 
@@ -42,6 +95,11 @@ void CD8Cell::cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadiu
     }
 }
 
+/*
+positive influence of M1 macrophages and T helper cells on killin gability 
+negative influence of M2 macrophages and Treg cells on killing ability
+baseline kill prob is determined by wheather cd8 is naive, exhuasted, or pro memory state
+*/
 void CD8Cell::cd8_setKillProb(){
     // set kill prob based on influence
     // essentially effects of cytokines

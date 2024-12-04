@@ -14,10 +14,11 @@ class CD4Cell: public Cell{
 public:
 
     //constructor
-    CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+    CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType);
     
     // functions
+    std::array<double, 3> cd4_proliferate(double dt);
     void cd4_differentiation(double dt);
     void cd4_age(double dt, size_t step_count);
     std::vector<double> cd4_directInteractionProperties(int interactingState, size_t step_count);
@@ -27,6 +28,8 @@ public:
     double get_probTh();
     void set_kTr(double value);
     double get_kTr();
+    
+    
 
 
 private:
