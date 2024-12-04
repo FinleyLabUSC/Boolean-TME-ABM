@@ -1,9 +1,9 @@
 #include "CD8Cell.h"
 
 //CD8 Cell Constructor 
-CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
           int cellType,std::vector<std::string> phenotypeTrajectory) 
-    : Cell(loc, idx, cellParams, init_tstamp)
+    : Cell(loc, cellParams, init_tstamp)
     {
     state = 6;
 

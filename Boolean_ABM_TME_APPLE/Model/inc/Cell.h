@@ -9,6 +9,12 @@
 #include <iostream>
 #include "ModelUtil.h"
 
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+// #include </opt/homebrew/Cellar/boost/uuid/uuid_generators.hpp>
+// #include </opt/homebrew/Cellar/boost/uuid/uuid_io.hpp>
+
 class Cell{
 public:
     /*
@@ -16,7 +22,7 @@ public:
      */
 
     // initialization
-    Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
+    Cell(std::array<double, 2> loc, std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
    
     // force functions
     std::array<double, 2> attractiveForce(std::array<double, 2> dx, double otherRadius);
@@ -39,12 +45,12 @@ public:
     
     
     void migrate(double dt, std::array<double, 2> tumorCenter);
-    void indirectInteractions(double tstep);
-    void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
+    //void indirectInteractions(double tstep);
+    //void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
     std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
 
     // differentiation
-    void differentiate(double dt);
+    //void differentiate(double dt);
 
     // cell influences
     void addInfluence(std::array<double, 2> otherX, double otherInfluence, int otherType);
@@ -104,8 +110,13 @@ public:
     //lifespan
     size_t init_time; 
 
+  
+
+    boost::uuids::uuid getId() const;
+
 private:
     std::mt19937 mt;
+    boost::uuids::uuid idx;
 };
 
 #endif //IMMUNE_MODEL_CELL_H

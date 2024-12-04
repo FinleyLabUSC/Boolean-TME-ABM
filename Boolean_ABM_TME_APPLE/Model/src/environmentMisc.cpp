@@ -9,8 +9,7 @@ void Environment::initializeCells() {
     double radiiCells = envParams[0];
 
 
-    cancer_list.push_back(CancerCell(cellParams, 0, {0.0,0.0}, 0, 0));
-
+    cancer_list.push_back(CancerCell(cellParams, 0, {0.0,0.0}, 0));
 
 
 
@@ -21,7 +20,7 @@ void Environment::initializeCells() {
         for(int j=0; j<nCells; ++j){
             double x = i * cellParams[4][0] * cos(2 * 3.1415 * j / nCells);
             double y = i * cellParams[4][0] * sin(2 * 3.1415 * j / nCells);
-            cancer_list.push_back(CancerCell(cellParams, 0, {x,y}, 0, 0));
+            cancer_list.push_back(CancerCell(cellParams, 0, {x,y}, 0));
             q++;
         }
     }
@@ -49,19 +48,19 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
 
                 std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
 
-                cd8_list.push_back(CD8Cell(cellParams, 0, recLoc, 0, 3, trajec_phenotype)); 
+                cd8_list.push_back(CD8Cell(cellParams, 0, recLoc, 3, trajec_phenotype));
             }
 
             //i==1 represents the idx associated with initializing a macrophage cell 
             else if (i == 1)
             {
-                macrophage_list.push_back(MacrophageCell(cellParams, 0, recLoc, int idx, 1));
+                macrophage_list.push_back(MacrophageCell(cellParams, 0, recLoc, 1));
             }
 
             //i==2 represents the idx associated with initializing a CD4 cell 
             else if (i == 2)
             {
-                cd4_list.push_back(CD4Cell(cellParams, 0, recLoc, int idx, 2));
+                cd4_list.push_back(CD4Cell(cellParams, 0, recLoc, 2));
             }
 
 

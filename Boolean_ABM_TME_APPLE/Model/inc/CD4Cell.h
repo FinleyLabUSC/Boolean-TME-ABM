@@ -14,7 +14,7 @@ class CD4Cell: public Cell{
 public:
 
     //constructor
-    CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+    CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType);
     
     // functions

@@ -21,14 +21,14 @@
  */
 
 // INITIALIZE CELL TYPE
-Cell::Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
+Cell::Cell(std::array<double, 2> loc, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
     /*
      * initialize all parameters to 0
      * set parameters based on cellType
      */
 
     x = loc;
-    id = idx;
+    idx = boost::uuids::random_generator()(); // Generate a unique UUID
 
     radius = 0;
     compressed = false;
@@ -349,3 +349,5 @@ std::array<double, 2> Cell::unitVector(std::array<double, 2> v) {
 void Cell::updateID(int idx) {
     id = idx;
 }
+
+boost::uuids::uuid Cell::getId() const {return idx;}

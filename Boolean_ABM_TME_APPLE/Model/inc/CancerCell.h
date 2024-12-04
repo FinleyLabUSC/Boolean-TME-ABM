@@ -15,7 +15,7 @@ class CancerCell: public Cell{
 public:
 
     // constructor 
-    CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+    CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType);
 
     //functions

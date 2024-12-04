@@ -14,7 +14,7 @@ class MacrophageCell: public Cell{
 public:
 
     //constructor 
-    MacrophageCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+    MacrophageCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
           int cellType);
 
     //functions

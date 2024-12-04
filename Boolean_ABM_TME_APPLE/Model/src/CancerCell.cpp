@@ -7,12 +7,11 @@
 
 // CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp) : Cell::Cell(args){ 
 
-CancerCell::CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, int idx, 
+CancerCell::CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType)
-    : Cell(loc, idx, cellParams, init_tstamp){
+    : Cell(loc, cellParams, init_tstamp){
     state = 3;
     canProlif = true;
-
 
 
     mu = cellParams[0][0];
