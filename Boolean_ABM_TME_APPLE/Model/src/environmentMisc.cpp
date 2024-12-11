@@ -9,7 +9,7 @@ void Environment::initializeCells() {
     double radiiCells = envParams[0];
 
 
-    cancer_list.push_back(CancerCell(cellParams, 0, {0.0,0.0}, 0));
+    cancer_list.push_back(CancerCell(cellParams, 0, {0.0,0.0}, 0)); // pushes a cancer cell on the cancer_list()
 
 
 
@@ -20,7 +20,7 @@ void Environment::initializeCells() {
         for(int j=0; j<nCells; ++j){
             double x = i * cellParams[4][0] * cos(2 * 3.1415 * j / nCells);
             double y = i * cellParams[4][0] * sin(2 * 3.1415 * j / nCells);
-            cancer_list.push_back(CancerCell(cellParams, 0, {x,y}, 0));
+            cancer_list.push_back(CancerCell(cellParams, 0, {x,y}, 0)); // pushes a cancer cell on the cancer_list()
             q++;
         }
     }
@@ -41,32 +41,32 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
             std::array<double, 2> recLoc = recruitmentLocation();
             
             //i==0 represents the idx associated with initializing a cd8 t cell
-            if(i == 0)
+            if(i == 0) // cd8 cell
             {
                 
-                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
+                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); //solves for phenotypeIdx
 
-                std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
+                std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx); //solves for trajec_phenotype with found phenotypeIdx
 
-                cd8_list.push_back(CD8Cell(cellParams, 0, recLoc, 3, trajec_phenotype));
+                cd8_list.push_back(CD8Cell(cellParams, 0, recLoc, 3, trajec_phenotype)); // pushes a CD8 cell on the cd8_list()
             }
 
             //i==1 represents the idx associated with initializing a macrophage cell 
-            else if (i == 1)
+            else if (i == 1) // macrophage cell
             {
-                macrophage_list.push_back(MacrophageCell(cellParams, 0, recLoc, 1));
+                macrophage_list.push_back(MacrophageCell(cellParams, 0, recLoc, 1)); //pushes a macrophage cell on the macrophage_list()
             }
 
             //i==2 represents the idx associated with initializing a CD4 cell 
-            else if (i == 2)
+            else if (i == 2) // cd4 cell 
             {
-                cd4_list.push_back(CD4Cell(cellParams, 0, recLoc, 2));
+                cd4_list.push_back(CD4Cell(cellParams, 0, recLoc, 2)); //pushes a cd4 cell on the cd4_list()
             }
 
 
 
 
-
+                // below shows the older version of the code when there was cell list rather than the specific cell lists with specific cell types
 
                 // if (phenotypeIdx == 0){
                 //     cell_list.push_back(Cell(recLoc,
@@ -121,7 +121,7 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
             }
             */
             
-            immuneCells2rec[i] -= 1;
+            immuneCells2rec[i] -= 1; //after reduces immune cells avalible to recruit by 1
         }
     }
 }
@@ -201,14 +201,14 @@ std::array<double, 2> Environment::recruitmentLocation() {
     return x;*/
 }
 
-void Environment::tumorSize(){
+void Environment::tumorSize(){ //solves for tumor size
     tumorCenter = {0,0};
     double avgX = 0;
     double avgY = 0;
     double numC = 0;
-    //for(auto &c : cell_list){
+    //for(auto &c : cell_list){  --> older version, only need to check in cancer list 
     for(auto &c : cancer_list){
-        if(c.type == 0) {
+        if(c.type == 0) { //double checking its a cancer cell
             avgX += c.x[0];
             avgY += c.x[1];
             numC += 1;
@@ -220,9 +220,9 @@ void Environment::tumorSize(){
     tumorCenter = {avgX, avgY};
 
     tumorRadius = 0;
-    //for(auto& c : cell_list){
+    //for(auto& c : cell_list){ --> older version, only need to check in cancer list 
     for(auto& c : cancer_list){
-        if(c.type == 0){
+        if(c.type == 0){ //double checking its a cancer cell
             tumorRadius = std::max(tumorRadius, c.calcDistance(tumorCenter));
         }
     }
@@ -275,10 +275,10 @@ void Environment::tumorSize(){
 
 void Environment::necrosis(double tstep) {
     int nCancer = 0;
-   // for(auto &c : cell_list){
+   // for(auto &c : cell_list){ --> older version, only need to check in cancer list 
     for(auto &c : cancer_list){
 
-        if(c.type == 0){
+        if(c.type == 0){ // double checking it is a cancer cell
             ++nCancer;
         }
     }

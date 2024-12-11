@@ -110,8 +110,7 @@ public:
     //lifespan
     size_t init_time; 
 
-  
-
+    //to get unique id for each cell made
     boost::uuids::uuid getId() const;
 
 private:

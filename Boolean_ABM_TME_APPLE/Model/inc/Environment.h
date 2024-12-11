@@ -30,6 +30,7 @@ public:
     void simulate(double tstep);
 
 private:
+    //enviromental functions
     void runCells(double tstep, size_t step_count);
     void neighborInfluenceInteractions(double tstep, size_t step_count);
     void internalCellFunctions(double tstep, size_t step_count);
@@ -56,12 +57,14 @@ private:
     
     double dt;
 
+    
     // cell lists
-    //std::vector<Cell> cell_list;
     std::vector<CancerCell> cancer_list;
     std::vector<CD4Cell> cd4_list;
     std::vector<CD8Cell> cd8_list;
     std::vector<MacrophageCell> macrophage_list;
+    //std::vector<Cell> cell_list;  
+    //above is commented out because we no longer have cell list filled with cells we have specific lists filled with specific cells
 
     
 

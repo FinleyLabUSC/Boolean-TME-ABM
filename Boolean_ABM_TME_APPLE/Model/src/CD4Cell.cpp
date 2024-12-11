@@ -1,6 +1,7 @@
 #include "CD4Cell.h"
 #include "Cell.h"
 
+// CD4 Cell constructor 
 CD4Cell::CD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType)
             :Cell(loc, cellParams, init_tstamp)
@@ -52,16 +53,15 @@ std::array<double, 3> CD4Cell::cd4_proliferate(double dt) {
 /*
 M2 cells promote differentiation of cd4 into regulatory state (and also promotes M0 into M2)
 CD4 in this model comes in as helper state and can be converted to regulatory state based on enviromental factors ^^
-
 */
 void CD4Cell::cd4_differentiation(double dt) {
-    if(state != 4){return;}
+    if(state != 4){return;} // checking if state is Th
 
     std::uniform_real_distribution<double> dis(0.0,1.0);
     // negInfuence is M2 + alive cancer
     double negInfluence = 1 - (1 - influences[2])*(1 - influences[3]);
     if(dis(mt) < kTr*negInfluence){
-        state = 5;
+        state = 5; //state become Treg
         pdl1 = pdl1WhenExpressed;
     }
 }
@@ -74,7 +74,7 @@ void CD4Cell::cd4_age(double dt, size_t step_count) {
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     if(dis(mt) < deathProb){
-        state = -1;
+        state = -1; // cell dies
     }
 }
 
@@ -88,11 +88,11 @@ std::vector<double> CD4Cell::cd4_directInteractionProperties(int interactingStat
     /*
      * returns the properties that go into Cell::directInteractions
      */
-    if (state == 4){
+    if (state == 4){ // checking if state is Th
         // CD4 helper
         return {};
     }
-    else if (state == 5){
+    else if (state == 5){ // checking if state is Treg
         // CD4 regulatory
         if(interactingState == 6){
             return {radius, pdl1};
@@ -101,6 +101,7 @@ std::vector<double> CD4Cell::cd4_directInteractionProperties(int interactingStat
     }
     return {};
 }
+// getters and setters for pdl1WhenExpressed(), probTh(), and kTr() 
 void CD4Cell::set_pdl1WhenExpressed(double value) {pdl1WhenExpressed = value;}
 double CD4Cell::get_pdl1WhenExpressed() {return pdl1WhenExpressed;}
 void CD4Cell::set_probTh(double value) {probTh = value;}

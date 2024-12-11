@@ -21,7 +21,6 @@ public:
 
     // functions
     // CD8 specific
-
     std::array<double, 3> cd8_proliferate(double dt);
     void cd8_prolifState();
     
@@ -44,10 +43,6 @@ public:
 
     void set_t_cell_phenotype_Trajectory(std::vector<std::string> value);
     std::vector<std::string> get_t_cell_phenotype_Trajectory();
-
-    
-
-    
 
 
 

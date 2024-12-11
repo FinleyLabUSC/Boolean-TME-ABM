@@ -1,5 +1,11 @@
 #include "Environment.h"
 
+/*
+* for each function changed from cell list and type checking to just use the more specific cell lists 
+* each time the cell_list() was called, we edited the code to reflect the new model
+* the older versions are commented out below the parts that were edited 
+*/ 
+
 void Environment::printStep(double time) {
     int numM = 0;
     int numT8 = 0;
@@ -22,6 +28,7 @@ void Environment::printStep(double time) {
         numC++;
     }
 
+
     /*
     for(auto &cell : cell_list){
         if(cell.type == 1){
@@ -35,6 +42,7 @@ void Environment::printStep(double time) {
         }
     }
     */
+   
 
     std::cout << "Time: " << (time/24) << std::endl;
 }
@@ -55,6 +63,9 @@ void Environment::updateTimeSeries() {
     for(auto &cell : cancer_list){
         numC++;
     }
+
+    // changed from cell list and type checking to just use the more specific cell lists 
+    // old version below 
 
     /*
     for(auto &cell : cell_list){
@@ -81,6 +92,7 @@ void Environment::updateTimeSeries() {
         if (m.state == 1) { m1++; }
         if (m.state == 2) { m2++; }
     }
+    
 
     /*
     for(auto &c : cell_list){

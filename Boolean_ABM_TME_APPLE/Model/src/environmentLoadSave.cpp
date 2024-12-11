@@ -1,7 +1,7 @@
 #include "Environment.h"
 #include "Cell.h"
 
-
+// loads parameters into environment
 void Environment::loadParams() {
     std::ifstream dataCP(saveDir+"/params/cellParams.csv");
     std::string line;
@@ -41,8 +41,11 @@ void Environment::loadParams() {
     dataEP.close();
 }
 
-void Environment::save(double tstep, double tstamp) {
-
+/*
+    *changed this function below from handeling the cell_list() to the more specific cell lists
+    *old code is below part that was added which shows cell lists and type checking
+*/
+void Environment::save(double tstep, double tstamp) { // save information from environment
     std::ofstream myfile;
     std::string day_dir = saveDir + "/cellLists/day_" + std::to_string(day);
     std::string str = "mkdir -p " + day_dir;
@@ -108,6 +111,7 @@ void Environment::save(double tstep, double tstamp) {
     }
 
     /*
+    // old code 
     for(auto &cell : cell_list){
         //logging cell location, type and state 
         if(cell.type == 3){ //cd8 t cell

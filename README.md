@@ -49,3 +49,8 @@ $ ./runModel modelPredictions 0 3 2 2
 
 ## Notes
 As of now, the entirety of the build is not seeded and, as such, running the model with the same parameter set will produce different results. 
+
+
+## Model Updates 
+- hello
+- 

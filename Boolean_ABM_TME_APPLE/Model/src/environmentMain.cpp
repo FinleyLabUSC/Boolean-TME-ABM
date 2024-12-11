@@ -167,6 +167,9 @@ void Environment::simulate(double tstep) {
             numC++;
         }
         /*
+
+        //old code is below of the updated version above^^
+
         for (auto &c: cell_list) {
             if (c.type == 0) {
                 numC++;

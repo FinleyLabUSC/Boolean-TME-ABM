@@ -52,17 +52,21 @@ std::array<double, 3> CD8Cell::cd8_proliferate(double dt) {
     }
 }
 
+/*
+Notice in the function below it is the exact same as cancer_prolifState()
+In the future the part for if (type == 0) could be taken out and the else if(type == 3) could be taken out in the cancer_prolifState()
+*/
 void CD8Cell::cd8_prolifState() {
     /*
      * cancer cells and CD8 can proliferate
      * right now, CD8 proliferation prob is set to 0, however leaving it in for future changes
      */
-    if(type == 0){
-        canProlif = !(state == -1 || compressed);
-    } else if(type == 3){
+    if(type == 0){ // checking if cancer cell
+        canProlif = !(state == -1 || compressed);  // can proliferate if not dead or compressed
+    } else if(type == 3){ // checking if CD8 cell
         // CTLs -> presence of Th promotes their proliferation, M2 and Treg decrease it
         // assume CTLs need IL-2 from Th to proliferate
-        canProlif = !(state == 7 || compressed);
+        canProlif = !(state == 7 || compressed); // can proliferate if not suppressed or compressed
         double posInfluence = influences[4];
         double negInfluence = 1 - (1 - influences[2])*(1 - influences[5]);
 
@@ -82,13 +86,13 @@ in exhaust state - reduced killing ability and higher probability of dying
 void CD8Cell::cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadius, double otherpdl1, double dt) {
     // inhibition via direct contact
 
-    if(state != 6){return;}
+    if(state != 6){return;} // if not active cd8
 
     double distance = calcDistance(otherX);
     if(distance <= radius+otherRadius){
         std::uniform_real_distribution<double> dis(0.0,1.0);
         if(dis(mt) < otherpdl1){
-            state = 7;
+            state = 7; // becomes suppressed cd8 cell
             killProb = 0;
             migrationSpeed = 0.0;
         }
@@ -106,7 +110,7 @@ void CD8Cell::cd8_setKillProb(){
     // Petty and Yang, Tumor-associated macrophages: implications in cancer immunotherapy, 2017
     //  - cytokines suppress T cell function
 
-    if(state != 6){return;}
+    if(state != 6){return;} // if not active cd8
 
     // posInfluence is M1 + Th
     // negInfluence is M2 + Treg
@@ -124,7 +128,7 @@ void CD8Cell::cd8_addChemotaxis(std::array<double, 2> otherX, double otherInflue
      *
      * determines influence at 8 points around the cell, so that it will chemotax towards the highest
      */
-    if(type == 0 || otherType != 0){return;}
+    if(type == 0 || otherType != 0){return;} // checking if type is a cancer cell or if otherType is not a cancer cell 
 
     std::array<double, 2> chemotax_x = {0.0,0.0};
     std::array<double, 2> dx = {0.0,0.0};
@@ -168,17 +172,17 @@ void CD8Cell::cd8_age(double dt, size_t step_count) {
         switch(phenotype_char){
         case 'N': 
             if(dis(mt) < deathProb){
-                state = -1;
+                state = -1; // cell dies 
             }
             
         case 'M': 
             if(dis(mt) < (deathProb/2)){
-                state = -1;
+                state = -1; // cell dies 
             }
             
         default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate     
             if(dis(mt) < deathProb){
-                state = -1;
+                state = -1; // cell dies 
             }
     }
     }
@@ -188,16 +192,16 @@ void CD8Cell::cd8_age(double dt, size_t step_count) {
         switch(phenotype_char){
         case 'N': 
             if(dis(mt) < deathProb){
-                state = -1;
+                state = -1; // cell dies 
             }
         case 'M': 
             if(dis(mt) < deathProb){
-                state = -1;
+                state = -1; // cell dies 
             }
             
         default: //case 'E' these are cells that are exhausted but haven't been supressed research showing exhausted t cells kill at lower rate
             if(dis(mt) < deathProb){
-                state = -1;
+                state = -1; // cell dies 
             }
         }
     }  
@@ -265,6 +269,7 @@ std::vector<double> CD8Cell::cd8_directInteractionProperties(int interactingStat
     
     return {};
 }
+// getters and setters for cd8 cells
 void CD8Cell::set_killProb(double value) {killProb = value;}
 double CD8Cell::get_killProb() {return killProb;}
 void CD8Cell::set_baseKillProb(double value) {baseKillProb = value;}

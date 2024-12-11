@@ -57,7 +57,7 @@ void MacrophageCell::macrophage_differentiation(double dt) {
      * inf-g secreting cells (CTL and Th) promote M1
      * M2, cancer, and Treg promote M2
      */
-    if(type != 1){return;}
+    if(type != 1){return;} // if not a macrophage
 
     // posInfluence is active CD8 + Th
     // negInfluence is M2 + alive cancer + Treg
@@ -78,9 +78,9 @@ void MacrophageCell::macrophage_differentiation(double dt) {
         if(p > probs[i]){choice++;}
     }
     state = choice;
-    if(state == 1){
+    if(state == 1){ //if M1
         pdl1 = 0;
-    } else if(state == 2){
+    } else if(state == 2){ // if M2
         pdl1 = pdl1WhenExpressed;
     }
 }
@@ -93,7 +93,7 @@ void MacrophageCell::macrophage_age(double dt, size_t step_count) {
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     if(dis(mt) < deathProb){
-        state = -1;
+        state = -1; // cell dies
     }
 }
 
@@ -116,7 +116,7 @@ std::vector<double> MacrophageCell::macrophage_directInteractionProperties(int i
     }
     return {};
 }
-
+// getters and setters for kTr(), kM1(), kM2(), plasticity(), and pdl1WhenExpressed()
 void MacrophageCell::set_kTr(double value) {kTr = value;}
 double MacrophageCell::get_kTr() {return kTr;}
 void MacrophageCell::set_kM1(double value) {kTr = value;}

@@ -21,6 +21,7 @@
  */
 
 // INITIALIZE CELL TYPE
+// General cell constructor 
 Cell::Cell(std::array<double, 2> loc, std::vector<std::vector<double>> &cellParams, size_t init_tstamp): mt((std::random_device())()) {
     /*
      * initialize all parameters to 0
@@ -152,6 +153,7 @@ void Cell::neighboringCells(std::array<double, 2> otherX, int otherID){
     /*
      * determine which cells are within 2*maximum interaction distance
      * stores the index in cell_list (in Environment) of the neighboring cells
+     * update december 2024: now stores index in seperate cell lists depending on what cell type (still in Enviroment)
      */
     double dis = calcDistance(otherX);
     if(dis <= 10*rmax){
@@ -171,12 +173,12 @@ void Cell::calculateOverlap(std::array<double, 2> otherX, double otherRadius) {
 }
 
 void Cell::resetOverlap() {
-    currentOverlap = 0;
+    currentOverlap = 0; //sets current overlap to 0
 }
 
 void Cell::isCompressed() {
-    compressed = currentOverlap > maxOverlap;
-    resetOverlap();
+    compressed = currentOverlap > maxOverlap; // compressed if the current overlap is greater than the max overlap
+    resetOverlap(); // sets current overlap back to 0 ^^ shown above
 }
 
 
@@ -308,7 +310,7 @@ void Cell::addInfluence(std::array<double, 2> otherX, double otherInfluence, int
     influences[otherState] = 1 - (1 - influences[otherState])*(1 - calcInfDistance(calcDistance(otherX), otherInfluence));
 }
 
-void Cell::clearInfluence() {
+void Cell::clearInfluence() { // sets influence and chemotaxVals to 0
     for(int i=0; i<influences.size(); ++i){
         influences[i] = 0;
     }
@@ -321,10 +323,13 @@ void Cell::clearInfluence() {
 
 // OTHER FUNCTIONS
 double Cell::calcDistance(std::array<double, 2> otherX) {
+    
+    // distance formula, d = sqrt( (x2-x1)^2 + (y2-y1)^2 )
+
     double d0 = (otherX[0] - x[0]);
     double d1 = (otherX[1] - x[1]);
 
-    return sqrt(d0*d0 + d1*d1);
+    return sqrt(d0*d0 + d1*d1); 
 }
 
 double Cell::calcInfDistance(double dist, double xth) {
@@ -350,4 +355,4 @@ void Cell::updateID(int idx) {
     id = idx;
 }
 
-boost::uuids::uuid Cell::getId() const {return idx;}
+boost::uuids::uuid Cell::getId() const {return idx;} // used to generate unique idx for each cell created

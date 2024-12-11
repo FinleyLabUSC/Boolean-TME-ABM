@@ -15,6 +15,14 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
      * THIRD LOOP
      * - differentiate
      */
+    
+/*
+originally the function below was a nested for loop iterating through cell_list 
+re did so it went from i = 0 to the specific cell list size 
+    then within each of these loops, looped through all the cells --> cancer, cd8, cd4, and macrophage
+only cancer cells and cd8 cells have indirectInteraction fucntions 
+    so the chunks of code that went from 0 to size of macrophage list or cd4 list were commented out 
+*/
 #pragma omp parallel for
         // reset neighborhood and influence
     for(int i=0; i<cancer_list.size(); ++i){
@@ -56,6 +64,7 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         cancer_list[i].cancer_indirectInteractions(tstep);
     }
 
+    // macrophage_indirectInteractions() as a function doesnt exist at the moment 
     /*
     for(int i=0; i<macrophage_list.size(); ++i){
         // reset neighborhood and influence
@@ -92,10 +101,11 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
                 //cell_list[i].addChemotaxis(c.x, c.influenceRadius, c.type);
             }
         }
-        macrophage_list[i].indirectInteractions(tstep);
+        macrophage_list[i].indirectInteractions(tstep); 
     }
     */
 
+   // cd4_indirectInteractions() as a function doesnt exist at the moment 
    /*
     for(int i=0; i<cd4_list.size(); ++i){
         // reset neighborhood and influence
@@ -174,7 +184,7 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         cd8_list[i].cd8_indirectInteractions(tstep);
     }
   
-
+    //below shows the original code
     /*
     for(int i=0; i<cell_list.size(); ++i){
         // reset neighborhood and influence
@@ -192,6 +202,14 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
     }
     */
 
+/*
+originally the function below iterated through cell_list and the cell at index i's neighbors 
+re did so it went from i = 0 to the specific cell list size
+    then looked at specific cell at index i's neighbors 
+
+only cancer cells and cd8 cells have directInteraction fucntions 
+    so the chunks of code that went from 0 to size of macrophage list or cd4 list were commented out 
+*/
 #pragma omp parallel for
     for(int i=0; i<cancer_list.size(); ++i){
         for(auto &cancer : cancer_list[i].neighbors){
@@ -202,17 +220,18 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         }
     }
 
+    // no directInteractions function for macrophage at the moment 
     /*
     for(int i=0; i<macrophage_list.size(); ++i){
         for(auto &macrophage : macrophage_list[i].neighbors){
-            macrophage_list[i].macdirectInteractions(macrophage_list[macrophage].state,
+            macrophage_list[i].directInteractions(macrophage_list[macrophage].state,
                                             macrophage_list[macrophage].x,
                                             macrophage_list[macrophage].directInteractionProperties(macrophage_list[i].state, step_count),
                                             tstep);
         }
     }
     
-
+    // no directInteractions function for cd4 at the moment 
     for(int i=0; i<cd4_list.size(); ++i){
         for(auto &cd4 : cd4_list[i].neighbors){
             cd4_list[i].directInteractions(cd4_list[cd4].state,
@@ -232,6 +251,7 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         }
     }
 
+    // older code shown below
     /*
     for(int i=0; i<cell_list.size(); ++i){
         for(auto &c : cell_list[i].neighbors){
@@ -242,7 +262,15 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         }
     }*/
 
+/*
+similar to above old code iterated through cell list and differentiated at each cell 
+changed it to go through each cell list type 
+realized only cd4 and macrophage have differentiation functions
+commented out cancer and cd8
+*/
 #pragma omp parallel for
+    
+    //no cancer_differentiate() at the moment
     /*
     for(int i=0; i<cancer_list.size(); ++i){
         cancer_list[i].differentiate(tstep);
@@ -257,12 +285,14 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
         cd4_list[i].cd4_differentiation(tstep);
     }
 
+    //no cd8_differentiate() at the moment
     /*
     for(int i=0; i<cd8_list.size(); ++i){
         cd8_list[i].differentiate(tstep);
     }
     */
 
+    //old code shown below
     /*
     for(int i=0; i<cell_list.size(); ++i){
         cell_list[i].differentiate(tstep);
@@ -287,6 +317,8 @@ void Environment::calculateForces(double tstep) {
     for(int q=0; q<Nsteps; ++q){
         // migrate first
 #pragma omp parallel for
+    // split older code into each cell list 
+
         for(int i=0; i<cancer_list.size(); ++i){
             cancer_list[i].migrate(dt, tumorCenter);
         }
@@ -303,6 +335,7 @@ void Environment::calculateForces(double tstep) {
             cd8_list[i].migrate(dt, tumorCenter);
         }
 
+        //old code below
         /*
         for(int i=0; i<cell_list.size(); ++i){
             cell_list[i].migrate(dt, tumorCenter);
@@ -312,8 +345,13 @@ void Environment::calculateForces(double tstep) {
 
         // calc forces
 #pragma omp parallel for
+    /*
+    used to have nested for loops of cell_list and cell_list[i] 
+    --> now goes through each specific cell list and specific cell list at i
+    */
         
-        for(int i=0; i<cancer_list.size(); ++i){
+        for(int i=0; i<cancer_list.size(); ++i){ // looking through cancer cells
+            // calc forces compared to all types of the neighbor cells  
             for(auto &cancer : cancer_list[i].neighbors){
                 cancer_list[i].calculateForces(cancer_list[cancer].x, cancer_list[cancer].radius, cancer_list[cancer].type);
             }
@@ -389,7 +427,7 @@ void Environment::calculateForces(double tstep) {
 
         }
 
-
+        //older code below
         /*
         for(int i=0; i<cell_list.size(); ++i){
             for(auto &c : cell_list[i].neighbors){
@@ -401,6 +439,10 @@ void Environment::calculateForces(double tstep) {
 
         // resolve forces
 #pragma omp parallel for
+    /*
+    used to have nested for loops of cell_list and cell_list[i] 
+    --> now goes through each specific cell list and resolve forces for cell at i
+    */
         
         for(int i=0; i<cancer_list.size(); ++i){
             cancer_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
@@ -418,7 +460,7 @@ void Environment::calculateForces(double tstep) {
             cd8_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
         }
         
-
+        //older code below
         /*
         for(int i=0; i<cell_list.size(); ++i){
             cell_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
@@ -430,6 +472,10 @@ void Environment::calculateForces(double tstep) {
 
     // calculate overlaps and proliferation states
 #pragma omp parallel for
+    /*
+    *old code went through cell_list and then calculated the overlap with other cells in the cell_list
+    *newer version goes through each list and then within each list goes through all cell types to calculate overlap
+    */
     
     for(int i=0; i<cancer_list.size(); ++i){
         for(auto &cancer : cancer_list[i].neighbors){
@@ -495,7 +541,7 @@ void Environment::calculateForces(double tstep) {
             cd8_list[i].isCompressed();
         }
         
-
+        //Older version
         /*
         for(int i=0; i<cell_list.size(); ++i){
             for(auto &c : cell_list[i].neighbors){
@@ -509,6 +555,11 @@ void Environment::calculateForces(double tstep) {
 
 
 
+// below I split up internalCellFunction to each of its specific cell types so that they could call their specific fucntion
+// ex: internalCancerCellFunctions calls cancer_age, cancer_prolifState, etc and always iterates through cell_list
+// also made a dead vector for each type of cell to make this work
+ 
+
 void Environment::internalCancerCellFunctions(double tstep, size_t step_count) {
     /*
      * cancer cell death via aging
@@ -516,11 +567,11 @@ void Environment::internalCancerCellFunctions(double tstep, size_t step_count) {
      * remove cell if out of bounds
      */
 
-    for(int i=0; i< cancer_list.size(); ++i){
-        cancer_list[i].cancer_age(tstep, step_count);
+    for(int i=0; i< cancer_list.size(); ++i){ //iterate through all cancer cells
+        cancer_list[i].cancer_age(tstep, step_count); //calculate age
         // if in necrotic core, die
-        if(cancer_list[i].calcDistance(tumorCenter) < necroticRadius){
-            cancer_list[i].state = -1;
+        if(cancer_list[i].calcDistance(tumorCenter) < necroticRadius){ 
+            cancer_list[i].state = -1; // cell dies
         }
 
         cancer_list[i].cancer_prolifState();
@@ -552,7 +603,8 @@ void Environment::internalCancerCellFunctions(double tstep, size_t step_count) {
         }
     }
 }
-        
+
+       
 void Environment::internalCD4CellFunctions(double tstep, size_t step_count) {
     /*
      * cd4 cell death via aging
@@ -561,10 +613,10 @@ void Environment::internalCD4CellFunctions(double tstep, size_t step_count) {
      */
 
     for(int i=0; i< cd4_list.size(); ++i){
-        cd4_list[i].cd4_age(tstep, step_count);
+        cd4_list[i].cd4_age(tstep, step_count); // go through cd4 cells
         // if in necrotic core, die
         if(cd4_list[i].calcDistance(tumorCenter) < necroticRadius){
-            cd4_list[i].state = -1;
+            cd4_list[i].state = -1; //cell dies
         }
 
         std::array<double, 3> newLoc = cd4_list[i].cd4_proliferate(tstep);
@@ -603,10 +655,10 @@ void Environment::internalCD8CellFunctions(double tstep, size_t step_count) {
      */
 
     for(int i=0; i< cd8_list.size(); ++i){ 
-        cd8_list[i].cd8_age(tstep, step_count);
+        cd8_list[i].cd8_age(tstep, step_count); //goes through cd8 cells
         // if in necrotic core, die
         if(cd8_list[i].calcDistance(tumorCenter) < necroticRadius){
-            cd8_list[i].state = -1;
+            cd8_list[i].state = -1; //cell dies
         }
 
         cd8_list[i].cd8_prolifState();
@@ -654,11 +706,11 @@ void Environment::internalMacrophageCellFunctions(double tstep, size_t step_coun
      * remove cell if out of bounds
      */
 
-    for(int i=0; i< macrophage_list.size(); ++i){
-        macrophage_list[i].macrophage_age(tstep, step_count);
+    for(int i=0; i< macrophage_list.size(); ++i){ //goes through macropage cells
+        macrophage_list[i].macrophage_age(tstep, step_count); //calc macrophage age 
         // if in necrotic core, die
         if(macrophage_list[i].calcDistance(tumorCenter) < necroticRadius){
-            macrophage_list[i].state = -1;
+            macrophage_list[i].state = -1; //cell dies 
         }
 
         std::array<double, 3> newLoc = macrophage_list[i].macrophage_proliferate(tstep);
@@ -692,11 +744,10 @@ void Environment::internalMacrophageCellFunctions(double tstep, size_t step_coun
 
 
 
-
 void Environment::runCells(double tstep, size_t step_count) {
     neighborInfluenceInteractions(tstep, step_count);
     calculateForces(tstep);
-    //internalCellFunctions(tstep, step_count);
+    //internalCellFunctions(tstep, step_count); // made sense in older version with cell_list but not with the seperate lists 
     internalCancerCellFunctions(tstep, step_count);
     internalCD4CellFunctions(tstep, step_count);
     internalCD8CellFunctions(tstep, step_count);

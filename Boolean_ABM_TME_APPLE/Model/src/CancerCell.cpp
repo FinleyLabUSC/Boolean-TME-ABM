@@ -2,10 +2,10 @@
 #include "CancerCell.h"
 #include "Cell.h"
 
-
-//Cancer cell constructor
+//Cancer Cell constructor
 
 // CellCancer::CellCancer(std::vector<std::vector<double>> &cellParams, size_t init_tstamp) : Cell::Cell(args){ 
+// this is the template we used to create the cancer cell constructor after we got rid of the unique ID parameter 
 
 CancerCell::CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType)
@@ -35,12 +35,12 @@ void CancerCell::cancer_dieFromCD8(std::array<double, 2> otherX, double otherRad
      * contact required
      * cell is removed from simulation when it dies
      */
-    if(type != 0){return;}
+    if(type != 0){return;} // checks to make sure it is a cancer cell 
 
-    if(calcDistance(otherX) <= radius+otherRadius){
+    if(calcDistance(otherX) <= radius+otherRadius){ // confirms contact
         std::uniform_real_distribution<double> dis(0.0,1.0);
         if(dis(mt) < kp){
-            state = -1;
+            state = -1;  // cell dies
         }
     }
 }
@@ -51,7 +51,7 @@ void CancerCell::cancer_gainPDL1(double dt) {
      * IFN-c is shown to increase PD-L1 expression (via t cell secretion)
      * after proliferation ->  daughter cells inherit the PD-L1 expression of the mother
      */
-    if(type != 0 || pdl1 > 0.0){return;}
+    if(type != 0 || pdl1 > 0.0){return;} // checks if cancer cell and if it already has signifigant amount of pdl1
 
     // induced by ifn-g secreting cells
     // posInfluence is Th + CD8
@@ -92,12 +92,12 @@ void CancerCell::cancer_prolifState() {
      * cancer cells and CD8 can proliferate
      * right now, CD8 proliferation prob is set to 0, however leaving it in for future changes
      */
-    if(type == 0){
-        canProlif = !(state == -1 || compressed);
-    } else if(type == 3){
+    if(type == 0){ // checking if cancer cell
+        canProlif = !(state == -1 || compressed); // can proliferate if not dead or compressed
+    } else if(type == 3){ // checking if CD8 cell
         // CTLs -> presence of Th promotes their proliferation, M2 and Treg decrease it
         // assume CTLs need IL-2 from Th to proliferate
-        canProlif = !(state == 7 || compressed);
+        canProlif = !(state == 7 || compressed); // can proliferate if not suppressed or compressed
         double posInfluence = influences[4];
         double negInfluence = 1 - (1 - influences[2])*(1 - influences[5]);
 
@@ -117,7 +117,7 @@ void CancerCell::cancer_age(double dt, size_t step_count) {
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     if(dis(mt) < deathProb){
-        state = -1;
+        state = -1; // cell dies
     }
 }
 
