@@ -15,6 +15,26 @@
 // #include </opt/homebrew/Cellar/boost/uuid/uuid_generators.hpp>
 // #include </opt/homebrew/Cellar/boost/uuid/uuid_io.hpp>
 
+/*
+ * CELL TYPES
+ * 0 - cancer
+ * 1 - macrophage
+ * 2 - CD4
+ * 3 - CD8
+ *
+ * CELL STATES
+ * -1 - dead
+ * 0 - M0
+ * 1 - M1
+ * 2 - M2
+ * 3 - alive (cancer)
+ * 4 - Th
+ * 5 - Treg
+ * 6 - active (CD8)
+ * 7 - suppressed (CD8)
+ *
+ */
+
 class Cell{
 public:
     /*
@@ -47,7 +67,7 @@ public:
     void migrate(double dt, std::array<double, 2> tumorCenter);
     //void indirectInteractions(double tstep);
     //void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
-    std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
+    virtual std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
 
     // differentiation
     //void differentiate(double dt);
@@ -110,7 +130,14 @@ public:
     //lifespan
     size_t init_time; 
 
-  
+    
+
+    //test
+
+    void neighbor_updated(Cell* n_ptr, int otherType, std::array<double, 2> otherX);
+
+    std::vector<Cell*> cell_neighbors; 
+    
 
     boost::uuids::uuid getId() const;
 

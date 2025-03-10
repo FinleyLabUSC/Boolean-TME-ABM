@@ -26,15 +26,9 @@ public:
     void cancer_age(double dt, size_t step_count);
     void cancer_indirectInteractions(double tstep);
     void cancer_directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
-    std::vector<double> cancer_directInteractionProperties(int interactingState, size_t step_count);
+    std::vector<double> directInteractionProperties(int interactingState, size_t step_count) override; 
 
-  
-
-
-
-
-
-     // variables
+    // variables
     double pdl1Shift;
     
 private:

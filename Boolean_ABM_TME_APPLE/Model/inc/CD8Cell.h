@@ -31,7 +31,8 @@ public:
     void cd8_age(double dt, size_t step_count);
     void cd8_indirectInteractions(double tstep);
     void cd8_directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
-    std::vector<double> cd8_directInteractionProperties(int interactingState, size_t step_count);
+    // std::vector<double> cd8_directInteractionProperties(int interactingState, size_t step_count);
+    std::vector<double> directInteractionProperties(int interactingState, size_t step_count) override; 
 
     void set_killProb(double value);
     double get_killProb();

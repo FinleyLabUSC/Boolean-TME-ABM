@@ -21,7 +21,8 @@ public:
     std::array<double, 3> macrophage_proliferate(double dt);
     void macrophage_differentiation(double dt);
     void macrophage_age(double dt, size_t step_count);
-    std::vector<double> macrophage_directInteractionProperties(int interactingState, size_t step_count);
+    std::vector<double> directInteractionProperties(int interactingState, size_t step_count) override; 
+    
     void set_kTr(double value);
     double get_kTr();
     void set_kM1(double value);

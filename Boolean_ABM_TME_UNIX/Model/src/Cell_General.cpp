@@ -548,7 +548,7 @@ std::vector<double> Cell::directInteractionProperties(int interactingState, size
                 char phenotype_char; 
                 if (t_cell_phenotype_Trajectory.empty() || (t_cell_phenotype_Trajectory.size() == 0)){
                     std::cerr << "WARNING directInteractionProperties: t_cell_phenotype_Trajectory is empty!" << std::endl;
-                    //handle any bada alloc error by assuming exhausted state...will debug this, very rare and not fatal 
+                    //handle any bad alloc error by assuming exhausted state...will debug this, very rare and not fatal 
                     phenotype_char = 'E'; 
                 }
                 else{

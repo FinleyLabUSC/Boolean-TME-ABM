@@ -115,17 +115,7 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
 
     printf("Finished reading trajectories located in %s...\n", tCellTrajectoryPath.c_str()); 
     
-    //attempt to load in t cell trajectory file 
-    std::string trajecPath =  "t_cell_trajectory/1Tcell_Sim_ABM.csv"; 
-    // std::string trajecPath2 = tCellTrajectoryPath + "/2Tcell_Sim_ABM.csv"; 
-    // std::string trajecPath3 = tCellTrajectoryPath + "/3Tcell_Sim_ABM.csv"; 
-
-    std::vector<std::vector<std::string>> trajec_csv_1;
     
-    // read_trajectory_csv(trajec_csv_1, trajecPath1); 
-    // // if we only care about the phenotype we can simply create a std::vector<std::string or char> of phenotypes 
-    std::vector<std::string> phenotype_trajec_1 = get_phenotype(trajec_csv_1); 
-    tCellPhenotypeTrajectory_1 = phenotype_trajec_1; 
     
 
 }
@@ -149,7 +139,9 @@ void Environment::simulate(double tstep) {
     std::cout << "starting simulations...\n";
     while(tstep*steps/24 < simulationDuration) {
         recruitImmuneCells(tstep, tstep*steps); 
+        
         runCells(tstep, tstep*steps);
+
         tumorSize();
         necrosis(tstep);
 
@@ -166,13 +158,6 @@ void Environment::simulate(double tstep) {
         for (auto &c: cancer_list) {
             numC++;
         }
-        /*
-        for (auto &c: cell_list) {
-            if (c.type == 0) {
-                numC++;
-            }
-        }
-        */
        
         if (numC == 0) {
             save(tstep, steps*tstep);

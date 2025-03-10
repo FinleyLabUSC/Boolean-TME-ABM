@@ -44,7 +44,7 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
             if(i == 0)
             {
                 
-                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
+                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()-1); 
 
                 std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
 
@@ -208,14 +208,14 @@ void Environment::tumorSize(){
     double numC = 0;
     //for(auto &c : cell_list){
     for(auto &c : cancer_list){
-        if(c.type == 0) {
-            avgX += c.x[0];
-            avgY += c.x[1];
-            numC += 1;
-        }
+        
+        avgX += c.x[0];
+        avgY += c.x[1];
+        numC += 1;
+        
     }
-    avgX /= numC;
-    avgY /= numC;
+    
+    
 
     tumorCenter = {avgX, avgY};
 

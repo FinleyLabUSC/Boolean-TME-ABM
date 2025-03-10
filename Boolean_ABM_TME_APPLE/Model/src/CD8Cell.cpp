@@ -5,6 +5,7 @@ CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
           int cellType,std::vector<std::string> phenotypeTrajectory) 
     : Cell(loc, cellParams, init_tstamp)
     {
+    type = cellType;
     state = 6;
 
     mu = cellParams[0][2];
@@ -25,6 +26,11 @@ CD8Cell::CD8Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstam
 
     t_cell_phenotype_Trajectory = phenotypeTrajectory; 
     init_time = init_tstamp;
+
+    if(t_cell_phenotype_Trajectory.size() == 0){
+        std::cerr << "empty t cell trajectory" << std::endl; 
+    }
+    
 }
 
 std::array<double, 3> CD8Cell::cd8_proliferate(double dt) {
@@ -216,7 +222,7 @@ void CD8Cell::cd8_directInteractions(int interactingState, std::array<double, 2>
         return;
 }
 
-std::vector<double> CD8Cell::cd8_directInteractionProperties(int interactingState, size_t step_count) {
+std::vector<double> CD8Cell::directInteractionProperties(int interactingState, size_t step_count) {
     /*
      * returns the properties that go into Cell::directInteractions
      */

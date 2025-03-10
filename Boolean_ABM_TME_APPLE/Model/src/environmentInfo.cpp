@@ -1,42 +1,16 @@
 #include "Environment.h"
 
 void Environment::printStep(double time) {
-    int numM = 0;
-    int numT8 = 0;
-    int numT4 = 0;
-    int numC = 0;
+    int numM = macrophage_list.size();
+    int numT8 = cd8_list.size();
+    int numT4 = cd4_list.size();
+    int numC = cancer_list.size();
 
-    for(auto &macrophage : macrophage_list){
-        numM++;
-    }
 
-    for(auto &cd8 : cd8_list){
-        numT8++;
-    }
-
-    for(auto &cd4 : cd4_list){
-        numT4++;
-    }
-
-    for(auto &cancer : cancer_list){
-        numC++;
-    }
-
-    /*
-    for(auto &cell : cell_list){
-        if(cell.type == 1){
-            numM++;
-        } else if(cell.type == 3){
-            numT8++;
-        } else if(cell.type == 2){
-            numT4++;
-        } else if(cell.type == 0){
-            numC++;
-        }
-    }
-    */
-
-    std::cout << "Time: " << (time/24) << std::endl;
+   std::cout << std::fixed << std::setprecision(5);
+    std::cout << "Time: " << std::setw(10) << (time / 24) << " | cancer: " << std::setw(10) << numC 
+          << " | cd8: " << std::setw(10) << numT8 << " | cd4: " << std::setw(10) << numT4 
+          << " | macrophage: " << std::setw(10) << numM << std::endl;
 }
 
 void Environment::updateTimeSeries() {

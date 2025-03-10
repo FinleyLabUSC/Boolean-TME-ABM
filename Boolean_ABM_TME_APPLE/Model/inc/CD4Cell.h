@@ -21,7 +21,8 @@ public:
     std::array<double, 3> cd4_proliferate(double dt);
     void cd4_differentiation(double dt);
     void cd4_age(double dt, size_t step_count);
-    std::vector<double> cd4_directInteractionProperties(int interactingState, size_t step_count);
+
+    std::vector<double> directInteractionProperties(int interactingState, size_t step_count) override; 
     void set_pdl1WhenExpressed(double value);
     double get_pdl1WhenExpressed();
     void set_probTh(double value);

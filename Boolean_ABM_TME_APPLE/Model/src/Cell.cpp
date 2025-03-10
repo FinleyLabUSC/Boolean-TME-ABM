@@ -153,12 +153,20 @@ void Cell::neighboringCells(std::array<double, 2> otherX, int otherID){
      * determine which cells are within 2*maximum interaction distance
      * stores the index in cell_list (in Environment) of the neighboring cells
      */
+    
     double dis = calcDistance(otherX);
     if(dis <= 10*rmax){
         neighbors.push_back(otherID);
     }
 }
+void Cell::neighbor_updated(Cell* n_ptr, int otherType, std::array<double, 2> otherX){
 
+    double dis = calcDistance(otherX);
+
+    if(dis <= 10*rmax){
+        cell_neighbors.push_back(n_ptr); 
+    }
+}
 // OVERLAP FUNCTIONS
 void Cell::calculateOverlap(std::array<double, 2> otherX, double otherRadius) {
     /*
@@ -183,6 +191,8 @@ void Cell::isCompressed() {
 
 
 void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
+    
+    
     /*
      * biased random-walk towards tumor center
      *
@@ -210,9 +220,11 @@ void Cell::migrate(double dt, std::array<double,2> tumorCenter) {
     }*/
     std::array<double, 2> dx_direction = {tumorCenter[0] - x[0],
                                           tumorCenter[1] - x[1]};
+
+    
     std::normal_distribution<double> vect(0.0, 1.0);
     std::array<double, 2> dx_random = {vect(mt), vect(mt)};
-
+    
     dx_direction = unitVector(dx_direction);
     dx_random = unitVector(dx_random);
     std::array<double, 2> dx_movement = {0,0};
@@ -348,6 +360,10 @@ std::array<double, 2> Cell::unitVector(std::array<double, 2> v) {
 
 void Cell::updateID(int idx) {
     id = idx;
+}
+
+std::vector<double> Cell::directInteractionProperties(int interactingState, size_t step_count){
+    return {}; 
 }
 
 boost::uuids::uuid Cell::getId() const {return idx;}

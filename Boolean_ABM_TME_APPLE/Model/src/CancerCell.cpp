@@ -10,6 +10,8 @@
 CancerCell::CancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp, std::array<double, 2> loc, 
             int cellType)
     : Cell(loc, cellParams, init_tstamp){
+    
+    type = cellType; 
     state = 3;
     canProlif = true;
 
@@ -140,7 +142,7 @@ void CancerCell::cancer_directInteractions(int interactingState, std::array<doub
         return;
 }
 
-std::vector<double> CancerCell::cancer_directInteractionProperties(int interactingState, size_t step_count) {
+std::vector<double> CancerCell::directInteractionProperties(int interactingState, size_t step_count) {
 
     /*
      * returns the properties that go into Cell::directInteractions
