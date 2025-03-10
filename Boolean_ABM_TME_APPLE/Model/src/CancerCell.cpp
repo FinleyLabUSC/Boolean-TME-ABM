@@ -150,6 +150,8 @@ std::vector<double> CancerCell::directInteractionProperties(int interactingState
     if (state == 3){
         // cancer
         if(interactingState == 6){
+            std::cout << radius << pdl1 << std::endl; 
+            
             return {radius, pdl1};
         }
         return {};

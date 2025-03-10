@@ -154,12 +154,12 @@ TODO
 
     for(auto& cc: cancer_list){
         for(auto cell_ptr: cc.cell_neighbors){
-            cc.cancer_directInteractions(cell_ptr->state, cell_ptr->x, cc.directInteractionProperties(cell_ptr->state, step_count), tstep); 
+            cc.cancer_directInteractions(cell_ptr->state, cell_ptr->x, cell_ptr->directInteractionProperties(cc.state, step_count), tstep); 
         }
     }
     for(auto& cd8: cd8_list){
         for(auto cell_ptr: cd8.cell_neighbors){
-            cd8.cd8_directInteractions(cell_ptr->state, cell_ptr->x, cd8.directInteractionProperties(cell_ptr->state, step_count), tstep);
+            cd8.cd8_directInteractions(cell_ptr->state, cell_ptr->x, cell_ptr->directInteractionProperties(cd8.state, step_count), tstep);
         }
     }
 

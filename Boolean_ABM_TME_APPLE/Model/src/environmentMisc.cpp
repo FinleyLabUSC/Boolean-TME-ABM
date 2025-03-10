@@ -214,6 +214,9 @@ void Environment::tumorSize(){
         numC += 1;
         
     }
+
+    avgX /= cancer_list.size(); 
+    avgY /= cancer_list.size(); 
     
     
 
@@ -226,6 +229,7 @@ void Environment::tumorSize(){
             tumorRadius = std::max(tumorRadius, c.calcDistance(tumorCenter));
         }
     }
+    std::cout << "tumor radius: " << tumorRadius << std::endl; 
 
     //originally commented out
 
