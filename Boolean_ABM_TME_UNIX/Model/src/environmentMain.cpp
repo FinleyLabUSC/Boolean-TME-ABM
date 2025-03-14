@@ -2,7 +2,7 @@
 #include "ModelUtil.h"
 
 
-namespace fs = std::filesystem; 
+namespace fs = std::__fs::filesystem; 
 
 
 void read_trajectory_csv(std::vector<std::vector<std::string>>& csv_data, std::string fpath){
@@ -98,7 +98,7 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
     printf("Attempting to read trajectories located in %s...\n", tCellTrajectoryPath.c_str()); 
 
     
-    for (const auto& entry : std::filesystem::directory_iterator(tCellTrajectoryPath)){
+    for (const auto& entry : std::__fs::filesystem::directory_iterator(tCellTrajectoryPath)){
         //make sure we are only reading csv files 
         if(entry.path().extension().string() == ".csv"){
             
@@ -115,19 +115,9 @@ Environment::Environment(std::string folder, std::string set, std::string tCellT
 
     printf("Finished reading trajectories located in %s...\n", tCellTrajectoryPath.c_str()); 
     
-    //attempt to load in t cell trajectory file 
-    std::string trajecPath =  "t_cell_trajectory/1Tcell_Sim_ABM.csv"; 
-    // std::string trajecPath2 = tCellTrajectoryPath + "/2Tcell_Sim_ABM.csv"; 
-    // std::string trajecPath3 = tCellTrajectoryPath + "/3Tcell_Sim_ABM.csv"; 
+    
+    
 
-    std::vector<std::vector<std::string>> trajec_csv_1;
-    
-    // read_trajectory_csv(trajec_csv_1, trajecPath1); 
-    // // if we only care about the phenotype we can simply create a std::vector<std::string or char> of phenotypes 
-    std::vector<std::string> phenotype_trajec_1; 
-    tCellPhenotypeTrajectory_1 = phenotype_trajec_1; 
-    
-    std::cout << "Constructor done" << std::endl; 
 }
 
 void Environment::simulate(double tstep) {
@@ -142,7 +132,6 @@ void Environment::simulate(double tstep) {
      */
 
     initializeCells();
-    std::cout << "initializeCells done " << std::endl; 
     tumorSize();
 
     save(tstep, steps*tstep);
@@ -150,7 +139,9 @@ void Environment::simulate(double tstep) {
     std::cout << "starting simulations...\n";
     while(tstep*steps/24 < simulationDuration) {
         recruitImmuneCells(tstep, tstep*steps); 
+        
         runCells(tstep, tstep*steps);
+
         tumorSize();
         necrosis(tstep);
 
@@ -163,11 +154,11 @@ void Environment::simulate(double tstep) {
         }
 
         int numC = 0;
-        for (auto &c: cell_list) {
-            if (c.type == 0) {
-                numC++;
-            }
+
+        for (auto &c: cancer_list) {
+            numC++;
         }
+       
         if (numC == 0) {
             save(tstep, steps*tstep);
             break;

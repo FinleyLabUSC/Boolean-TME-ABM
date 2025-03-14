@@ -15,36 +15,162 @@ void Environment::neighborInfluenceInteractions(double tstep, size_t step_count)
      * THIRD LOOP
      * - differentiate
      */
-
 #pragma omp parallel for
-    for(int i=0; i<cell_list.size(); ++i){
+
         // reset neighborhood and influence
-        cell_list[i].neighbors.clear();
-        cell_list[i].clearInfluence();
-        for(auto &c : cell_list){
-            // assume that a cell cannot influence itself
-            if(cell_list[i].id != c.id){
-                cell_list[i].neighboringCells(c.x, c.id);
-                cell_list[i].addInfluence(c.x, c.influenceRadius, c.state);
-                //cell_list[i].addChemotaxis(c.x, c.influenceRadius, c.type);
+        for(auto &cancer_cell: cancer_list){
+            //clear neighbor list
+            cancer_cell.cell_neighbors.clear();
+            cancer_cell.clearInfluence(); 
+            //neighbors and influence for cancer cells
+            for(auto &other_cc: cancer_list){
+                if(cancer_cell.getId() != other_cc.getId()){
+                    cancer_cell.neighbor_updated(&other_cc, other_cc.type, other_cc.x);
+                    cancer_cell.addInfluence(other_cc.x, other_cc.influenceRadius, other_cc.state);
+                }
             }
+            for(auto &other_mac: macrophage_list){
+                if(cancer_cell.getId() != other_mac.getId()){
+                    cancer_cell.neighbor_updated(&other_mac, other_mac.type, other_mac.x);
+                    cancer_cell.addInfluence(other_mac.x, other_mac.influenceRadius, other_mac.state);
+                }
+            }
+            for(auto &other_c4: cd4_list){
+                if(cancer_cell.getId() != other_c4.getId()){
+                    cancer_cell.neighbor_updated(&other_c4, other_c4.type, other_c4.x);
+                    cancer_cell.addInfluence(other_c4.x, other_c4.influenceRadius, other_c4.state);
+                }
+            }
+            for(auto &other_c8: cd8_list){
+                if(cancer_cell.getId() != other_c8.getId()){
+                    cancer_cell.neighbor_updated(&other_c8, other_c8.type, other_c8.x);
+                    cancer_cell.addInfluence(other_c8.x, other_c8.influenceRadius, other_c8.state);
+                }
+            }
+            cancer_cell.cancer_indirectInteractions(tstep); 
         }
-        cell_list[i].indirectInteractions(tstep);
+        /*
+        for(auto &mac_cell: macrophage_list){
+            //clear neighbor list
+            mac_cell.cell_neighbors.clear();
+            mac_cell.clearInfluence(); 
+            //neighbors and influence for cancer cells
+            for(auto &other_cc: cancer_list){
+                if(mac_cell.getId() != other_cc.getId()){
+                    mac_cell.neighbor_updated(&other_cc, other_cc.type, other_cc.x);
+                    mac_cell.addInfluence(other_cc.x, other_cc.influenceRadius, other_cc.state);
+                }
+            }
+            for(auto &other_mac: macrophage_list){
+                if(mac_cell.getId() != other_mac.getId()){
+                    mac_cell.neighbor_updated(&other_mac, other_mac.type, other_mac.x);
+                    mac_cell.addInfluence(other_mac.x, other_mac.influenceRadius, other_mac.state);
+                }
+            }
+            for(auto &other_c4: cd4_list){
+                if(mac_cell.getId() != other_c4.getId()){
+                    mac_cell.neighbor_updated(&other_c4, other_c4.type, other_c4.x);
+                    mac_cell.addInfluence(other_c4.x, other_c4.influenceRadius, other_c4.state);
+                }
+            }
+            for(auto &other_c8: cd8_list){
+                if(mac_cell.getId() != other_c8.getId()){
+                    mac_cell.neighbor_updated(&other_c8, other_c8.type, other_c8.x);
+                    mac_cell.addInfluence(other_c8.x, other_c8.influenceRadius, other_c8.state);
+                }
+            }
+            //can add macrophage indirect interactions
+        }
+
+        for(auto &cd4_cell: cd4_list){
+            //clear neighbor list
+            cd4_cell.cell_neighbors.clear();
+            cd4_cell.clearInfluence(); 
+            //neighbors and influence for cancer cells
+            for(auto &other_cc: cancer_list){
+                if(cd4_cell.getId() != other_cc.getId()){
+                    cd4_cell.neighbor_updated(&other_cc, other_cc.type, other_cc.x);
+                    cd4_cell.addInfluence(other_cc.x, other_cc.influenceRadius, other_cc.state);
+                }
+            }
+            for(auto &other_mac: macrophage_list){
+                if(cd4_cell.getId() != other_mac.getId()){
+                    cd4_cell.neighbor_updated(&other_mac, other_mac.type, other_mac.x);
+                    cd4_cell.addInfluence(other_mac.x, other_mac.influenceRadius, other_mac.state);
+                }
+            }
+            for(auto &other_c4: cd4_list){
+                if(cd4_cell.getId() != other_c4.getId()){
+                    cd4_cell.neighbor_updated(&other_c4, other_c4.type, other_c4.x);
+                    cd4_cell.addInfluence(other_c4.x, other_c4.influenceRadius, other_c4.state);
+                }
+            }
+            for(auto &other_c8: cd8_list){
+                if(cd4_cell.getId() != other_c8.getId()){
+                    cd4_cell.neighbor_updated(&other_c8, other_c8.type, other_c8.x);
+                    cd4_cell.addInfluence(other_c8.x, other_c8.influenceRadius, other_c8.state);
+                }
+            }
+            //can add cd4 indirect interactions
+        }
+        */
+
+        for(auto &cd8_cell: cd8_list){
+            //clear neighbor list
+            cd8_cell.cell_neighbors.clear();
+            cd8_cell.clearInfluence(); 
+            //neighbors and influence for cancer cells
+            for(auto &other_cc: cancer_list){
+                if(cd8_cell.getId() != other_cc.getId()){
+                    cd8_cell.neighbor_updated(&other_cc, other_cc.type, other_cc.x);
+                    cd8_cell.addInfluence(other_cc.x, other_cc.influenceRadius, other_cc.state);
+                }
+            }
+            for(auto &other_mac: macrophage_list){
+                if(cd8_cell.getId() != other_mac.getId()){
+                    cd8_cell.neighbor_updated(&other_mac, other_mac.type, other_mac.x);
+                    cd8_cell.addInfluence(other_mac.x, other_mac.influenceRadius, other_mac.state);
+                }
+            }
+            for(auto &other_c4: cd4_list){
+                if(cd8_cell.getId() != other_c4.getId()){
+                    cd8_cell.neighbor_updated(&other_c4, other_c4.type, other_c4.x);
+                    cd8_cell.addInfluence(other_c4.x, other_c4.influenceRadius, other_c4.state);
+                }
+            }
+            for(auto &other_c8: cd8_list){
+                if(cd8_cell.getId() != other_c8.getId()){
+                    cd8_cell.neighbor_updated(&other_c8, other_c8.type, other_c8.x);
+                    cd8_cell.addInfluence(other_c8.x, other_c8.influenceRadius, other_c8.state);
+                }
+            }
+            cd8_cell.cd8_indirectInteractions(tstep); 
+        }
+
+/*
+TODO
+*/
+#pragma omp parallel for
+
+    for(auto& cc: cancer_list){
+        for(auto cell_ptr: cc.cell_neighbors){
+            cc.cancer_directInteractions(cell_ptr->state, cell_ptr->x, cell_ptr->directInteractionProperties(cc.state, step_count), tstep); 
+        }
+    }
+    for(auto& cd8: cd8_list){
+        for(auto cell_ptr: cd8.cell_neighbors){
+            cd8.cd8_directInteractions(cell_ptr->state, cell_ptr->x, cell_ptr->directInteractionProperties(cd8.state, step_count), tstep);
+        }
     }
 
 #pragma omp parallel for
-    for(int i=0; i<cell_list.size(); ++i){
-        for(auto &c : cell_list[i].neighbors){
-            cell_list[i].directInteractions(cell_list[c].state,
-                                            cell_list[c].x,
-                                            cell_list[c].directInteractionProperties(cell_list[i].state, step_count),
-                                            tstep);
-        }
+
+    for(int i=0; i<macrophage_list.size(); ++i){
+        macrophage_list[i].macrophage_differentiation(tstep);
     }
 
-#pragma omp parallel for
-    for(int i=0; i<cell_list.size(); ++i){
-        cell_list[i].differentiate(tstep);
+    for(int i=0; i<cd4_list.size(); ++i){
+        cd4_list[i].cd4_differentiation(tstep);
     }
 }
 
@@ -64,96 +190,307 @@ void Environment::calculateForces(double tstep) {
     // also includes migration
     for(int q=0; q<Nsteps; ++q){
         // migrate first
+        
 #pragma omp parallel for
+        for(int i=0; i<cancer_list.size(); ++i){
+            cancer_list[i].migrate(dt, tumorCenter);
+        }
+
+        for(int i=0; i<macrophage_list.size(); ++i){
+            macrophage_list[i].migrate(dt, tumorCenter);
+        }
+
+        for(int i=0; i<cd4_list.size(); ++i){
+
+            cd4_list[i].migrate(dt, tumorCenter);
+        }
+
+        for(int i=0; i<cd8_list.size(); ++i){
+            cd8_list[i].migrate(dt, tumorCenter);
+        }
+
+        /*
         for(int i=0; i<cell_list.size(); ++i){
             cell_list[i].migrate(dt, tumorCenter);
         }
+        */
+        
 
         // calc forces
 #pragma omp parallel for
-        for(int i=0; i<cell_list.size(); ++i){
-            for(auto &c : cell_list[i].neighbors){
-                cell_list[i].calculateForces(cell_list[c].x, cell_list[c].radius, cell_list[c].type);
+        
+        for(auto& cc: cancer_list){
+            for(auto cell_ptr: cc.cell_neighbors){
+                cc.calculateForces(cell_ptr->x, cell_ptr->radius, cell_ptr->type); 
             }
         }
+        for(auto& mac: macrophage_list){
+            for(auto cell_ptr: mac.cell_neighbors){
+                mac.calculateForces(cell_ptr->x, cell_ptr->radius, cell_ptr->type); 
+            }
+        }
+        for(auto& cd4: cd4_list){
+            for(auto cell_ptr: cd4.cell_neighbors){
+                cd4.calculateForces(cell_ptr->x, cell_ptr->radius, cell_ptr->type); 
+            }
+        }
+        for(auto& cd8: cd8_list){
+            for(auto cell_ptr: cd8.cell_neighbors){
+                cd8.calculateForces(cell_ptr->x, cell_ptr->radius, cell_ptr->type); 
+            }
+        }
+        
 
         // resolve forces
 #pragma omp parallel for
-        for(int i=0; i<cell_list.size(); ++i){
-            cell_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
+        
+        for(int i=0; i<cancer_list.size(); ++i){
+            cancer_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
         }
+
+        for(int i=0; i<macrophage_list.size(); ++i){
+            macrophage_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
+        }
+
+        for(int i=0; i<cd4_list.size(); ++i){
+            cd4_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
+        }
+
+        for(int i=0; i<cd8_list.size(); ++i){
+            cd8_list[i].resolveForces(dt, tumorCenter, necroticRadius, necroticForce);
+        }
+       
     }
 
     // calculate overlaps and proliferation states
 #pragma omp parallel for
-    for(int i=0; i<cell_list.size(); ++i){
-        for(auto &c : cell_list[i].neighbors){
-            cell_list[i].calculateOverlap(cell_list[c].x, cell_list[c].radius);
+    
+    for(auto& cc: cancer_list){
+        for(auto cell_ptr: cc.cell_neighbors){
+            cc.calculateOverlap(cell_ptr->x, cell_ptr->radius); 
         }
-        cell_list[i].isCompressed();
+        cc.isCompressed();
     }
-}
+    for(auto& mac: macrophage_list){
+        for(auto cell_ptr: mac.cell_neighbors){
+            mac.calculateOverlap(cell_ptr->x, cell_ptr->radius); 
+        }
+        mac.isCompressed(); 
+    }
+    for(auto& cd4: cd4_list){
+        for(auto cell_ptr: cd4.cell_neighbors){
+            cd4.calculateOverlap(cell_ptr->x, cell_ptr->radius); 
+        }
+        cd4.isCompressed(); 
+    }
 
-void Environment::internalCellFunctions(double tstep, size_t step_count) {
+    for(auto& cd8: cd8_list){
+        for(auto cell_ptr: cd8.cell_neighbors){
+            cd8.calculateOverlap(cell_ptr->x, cell_ptr->radius); 
+        }
+        cd8.isCompressed();
+    }
+        
+    }
+
+
+
+void Environment::internalCancerCellFunctions(double tstep, size_t step_count) {
     /*
-     * cell death via aging
-     * cell proliferation
+     * cancer cell death via aging
+     * cancer cell proliferation
      * remove cell if out of bounds
      */
-    int numCells = cell_list.size();
-    for(int i=0; i<numCells; ++i){
-        cell_list[i].age(tstep, step_count);
+
+    for(int i=0; i< cancer_list.size(); ++i){
+        cancer_list[i].cancer_age(tstep, step_count);
         // if in necrotic core, die
-        if(cell_list[i].calcDistance(tumorCenter) < necroticRadius){
-            cell_list[i].state = -1;
+        if(cancer_list[i].calcDistance(tumorCenter) < necroticRadius){
+            cancer_list[i].state = -1;
         }
-        cell_list[i].prolifState();
-        std::array<double, 3> newLoc = cell_list[i].proliferate(tstep);
+
+        cancer_list[i].cancer_prolifState();
+        std::array<double, 3> newLoc = cancer_list[i].cancer_proliferate(tstep);
+
         if(newLoc[2] == 1){
-            if(cell_list[i].type == 3){
-                int phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
-                std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
-                if(trajec_phenotype.empty() || trajec_phenotype.size() == 0){
-                    std::cerr << "WARNING INTERNAL CELL FUNCTIONS: t_cell_phenotype_Trajectory is empty!" << std::endl; 
-                }
-                cell_list.push_back(Cell({newLoc[0], newLoc[1]},
-                                     cell_list.size(),
-                                     cellParams,
-                                     cell_list[i].type, trajec_phenotype, step_count));
-            }
-            else{
-                cell_list.push_back(Cell({newLoc[0], newLoc[1]},
-                                     cell_list.size(),
-                                     cellParams,
-                                     cell_list[i].type, tCellPhenotypeTrajectory_1));
-
-            }
-            cell_list[cell_list.size() - 1].inherit(cell_list[i].inheritanceProperties());
+            cancer_list.push_back(CancerCell(cellParams, step_count, {newLoc[0], newLoc[1]}, 0));
+            cancer_list[cancer_list.size() - 1].inherit(cancer_list[i].inheritanceProperties());
         }
     }
 
-    // remove dead cells
-    std::vector<int> dead;
-    for(int i=0; i<cell_list.size(); ++i){
-        if(cell_list[i].state == -1){
-            dead.push_back(i);
+    // remove dead cancer cells
+    std::vector<int> cancer_dead;
+    
+    for(int i=0; i<cancer_list.size(); ++i){
+        if(cancer_list[i].state == -1){
+            cancer_dead.push_back(i);
         }
     }
-    std::reverse(dead.begin(), dead.end());
-    for(auto &i : dead){
-        cell_list.erase(cell_list.begin()+i);
+    std::reverse(cancer_dead.begin(), cancer_dead.end());
+    for(auto &i : cancer_dead){
+        cancer_list.erase(cancer_list.begin()+i);
     }
 
-    for(int i=0; i<cell_list.size(); ++i){
-        cell_list[i].updateID(i);
-        if(cell_list[i].state == -1){
-            throw std::runtime_error("Environment::internalCellFunctions -> dead cell not removed");
+    for(int i=0; i<cancer_list.size(); ++i){
+        cancer_list[i].updateID(i);
+        if(cancer_list[i].state == -1){
+            throw std::runtime_error("Environment::internalCellFunctions -> dead cancer cell not removed");
         }
     }
 }
+        
+void Environment::internalCD4CellFunctions(double tstep, size_t step_count) {
+    /*
+     * cd4 cell death via aging
+     * cd4 cell proliferation
+     * remove cell if out of bounds
+     */
+
+    for(int i=0; i< cd4_list.size(); ++i){
+        cd4_list[i].cd4_age(tstep, step_count);
+        // if in necrotic core, die
+        if(cd4_list[i].calcDistance(tumorCenter) < necroticRadius){
+            cd4_list[i].state = -1;
+        }
+
+        std::array<double, 3> newLoc = cd4_list[i].cd4_proliferate(tstep);
+        if(newLoc[2] == 1){
+            cd4_list.push_back(CD4Cell(cellParams, step_count , {newLoc[0], newLoc[1]}, 2));
+            cd4_list[cd4_list.size() - 1].inherit(cd4_list[i].inheritanceProperties());
+        }
+    }
+
+    // remove dead cd4 cells
+    std::vector<int> cd4_dead;
+
+    for(int i=0; i<cd4_list.size(); ++i){
+        if(cd4_list[i].state == -1){
+            cd4_dead.push_back(i);
+        }
+    }
+    std::reverse(cd4_dead.begin(), cd4_dead.end());
+    for(auto &i : cd4_dead){
+        cd4_list.erase(cd4_list.begin()+i);
+    }
+
+    for(int i=0; i<cd4_list.size(); ++i){
+        cd4_list[i].updateID(i);
+        if(cd4_list[i].state == -1){
+            throw std::runtime_error("Environment::internalCellFunctions -> dead cd4 cell not removed");
+        }
+    }
+}
+
+void Environment::internalCD8CellFunctions(double tstep, size_t step_count) {
+    /*
+     * cd8 cell death via aging
+     * cd8 cell proliferation
+     * remove cell if out of bounds
+     */
+
+    for(int i=0; i< cd8_list.size(); ++i){ 
+        cd8_list[i].cd8_age(tstep, step_count);
+        // if in necrotic core, die
+        if(cd8_list[i].calcDistance(tumorCenter) < necroticRadius){
+            cd8_list[i].state = -1;
+        }
+
+        cd8_list[i].cd8_prolifState();
+        std::array<double, 3> newLoc = cd8_list[i].cd8_proliferate(tstep);
+
+        if(newLoc[2] == 1){
+            int phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size() - 1); 
+            std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
+            
+            if(trajec_phenotype.empty() || trajec_phenotype.size() == 0){
+                std::cout << "ATTEMPTING TO ACCESS TRAJECTORY" << phenotypeIdx << std::endl;  
+                std::cerr << "WARNING INTERNAL CELL FUNCTIONS: t_cell_phenotype_Trajectory is empty!" << std::endl; 
+            }
+
+            cd8_list.push_back(CD8Cell(cellParams, step_count, {newLoc[0], newLoc[1]}, 3, trajec_phenotype));
+            cd8_list[cd8_list.size() - 1].inherit(cd8_list[i].inheritanceProperties());
+        }
+    }
+
+
+    // remove dead cd8 cells
+    std::vector<int> cd8_dead;
+
+    for(int i=0; i<cd8_list.size(); ++i){
+        if(cd8_list[i].state == -1){
+            cd8_dead.push_back(i);
+        }
+    }
+    std::reverse(cd8_dead.begin(), cd8_dead.end());
+    for(auto &i : cd8_dead){
+        cd8_list.erase(cd8_list.begin()+i);
+    }
+
+    for(int i=0; i<cd8_list.size(); ++i){
+        cd8_list[i].updateID(i);
+        if(cd8_list[i].state == -1){
+            throw std::runtime_error("Environment::internalCellFunctions -> dead cd8 cell not removed");
+        }
+    }
+}
+
+void Environment::internalMacrophageCellFunctions(double tstep, size_t step_count) {
+
+    /*
+     * macrophage death via aging
+     * macrophage proliferation
+     * remove cell if out of bounds
+     */
+
+    for(int i=0; i< macrophage_list.size(); ++i){
+        macrophage_list[i].macrophage_age(tstep, step_count);
+        // if in necrotic core, die
+        if(macrophage_list[i].calcDistance(tumorCenter) < necroticRadius){
+            macrophage_list[i].state = -1;
+        }
+
+        std::array<double, 3> newLoc = macrophage_list[i].macrophage_proliferate(tstep);
+        if(newLoc[2] == 1){
+            macrophage_list.push_back(MacrophageCell(cellParams, step_count, {newLoc[0], newLoc[1]}, 1));
+            macrophage_list[macrophage_list.size() - 1].inherit(macrophage_list[i].inheritanceProperties());
+        }
+    }
+
+
+    // remove dead macrophage cells
+    std::vector<int> macrophage_dead;
+
+    for(int i=0; i<macrophage_list.size(); ++i){
+        if(macrophage_list[i].state == -1){
+            macrophage_dead.push_back(i);
+        }
+    }
+    std::reverse(macrophage_dead.begin(), macrophage_dead.end());
+    for(auto &i : macrophage_dead){
+        macrophage_list.erase(macrophage_list.begin()+i);
+    }
+
+    for(int i=0; i<macrophage_list.size(); ++i){
+        macrophage_list[i].updateID(i);
+        if(macrophage_list[i].state == -1){
+            throw std::runtime_error("Environment::internalCellFunctions -> dead macrophage cell not removed");
+        }
+    }
+}
+
+
+
 
 void Environment::runCells(double tstep, size_t step_count) {
     neighborInfluenceInteractions(tstep, step_count);
+    
     calculateForces(tstep);
-    internalCellFunctions(tstep, step_count);
+    
+    //internalCellFunctions(tstep, step_count);
+    internalCancerCellFunctions(tstep, step_count);
+    internalCD4CellFunctions(tstep, step_count);
+    internalCD8CellFunctions(tstep, step_count);
+    internalMacrophageCellFunctions(tstep, step_count);
 }
+
+

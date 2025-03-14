@@ -7,6 +7,33 @@
 #include <random>
 #include <string>
 #include <iostream>
+#include "ModelUtil.h"
+
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+// #include </opt/homebrew/Cellar/boost/uuid/uuid_generators.hpp>
+// #include </opt/homebrew/Cellar/boost/uuid/uuid_io.hpp>
+
+/*
+ * CELL TYPES
+ * 0 - cancer
+ * 1 - macrophage
+ * 2 - CD4
+ * 3 - CD8
+ *
+ * CELL STATES
+ * -1 - dead
+ * 0 - M0
+ * 1 - M1
+ * 2 - M2
+ * 3 - alive (cancer)
+ * 4 - Th
+ * 5 - Treg
+ * 6 - active (CD8)
+ * 7 - suppressed (CD8)
+ *
+ */
 
 class Cell{
 public:
@@ -15,13 +42,8 @@ public:
      */
 
     // initialization
-    Cell(std::array<double, 2> loc, int idx, std::vector<std::vector<double>> &cellParams, int cellType,
-    std::vector<std::string> tCellPhenotypeTrajectory, size_t init_tstamp=0);
-    void initializeCancerCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
-    void initializeCD8Cell(std::vector<std::vector<double>> &cellParams, std::vector<std::string> phenotypeTrajectory, size_t init_tstamp);
-    void initializeCD4Cell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
-    void initializeMacrophageCell(std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
-
+    Cell(std::array<double, 2> loc, std::vector<std::vector<double>> &cellParams, size_t init_tstamp=0);
+   
     // force functions
     std::array<double, 2> attractiveForce(std::array<double, 2> dx, double otherRadius);
     std::array<double, 2> repulsiveForce(std::array<double, 2> dx, double otherRadius);
@@ -36,37 +58,23 @@ public:
     void isCompressed();
 
     // cell behavior functions
-    std::array<double, 3> proliferate(double dt);
-    void prolifState();
+    
+   
     void inherit(std::vector<double> properties);
     std::vector<double> inheritanceProperties();
-    void age(double dt, size_t step_count);
+    
+    
     void migrate(double dt, std::array<double, 2> tumorCenter);
-    void indirectInteractions(double tstep);
-    void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
-    std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
+    //void indirectInteractions(double tstep);
+    //void directInteractions(int interactingState, std::array<double, 2> interactingX, std::vector<double> interactionProperties, double tstep);
+    virtual std::vector<double> directInteractionProperties(int interactingState, size_t step_count);
 
     // differentiation
-    void differentiate(double dt);
+    //void differentiate(double dt);
 
     // cell influences
     void addInfluence(std::array<double, 2> otherX, double otherInfluence, int otherType);
-    void addChemotaxis(std::array<double, 2> otherX, double otherInfluence, int otherType);
-    void clearInfluence();
-
-    // macrophage
-    void macrophage_differentiation(double dt);
-
-    // CD4 specific
-    void cd4_differentiation(double dt);
-
-    // CD8 specific
-    void cd8_setKillProb();
-    void cd8_pdl1Inhibition(std::array<double, 2> otherX, double otherRadius, double otherpdl1, double dt);
-
-    // cancer specific
-    void cancer_dieFromCD8(std::array<double, 2> otherX, double otherRadius, double kp, double dt);
-    void cancer_gainPDL1(double dt);
+    void clearInfluence(); 
 
     // other functions
     double calcDistance(std::array<double, 2> otherX);
@@ -93,7 +101,6 @@ public:
     double divProb_base;
     double deathProb;
     bool canProlif;
-    int pTypeStateTransition; // for CD8+ T cells only
 
     // force properties
     double mu;
@@ -107,28 +114,13 @@ public:
     double migrationSpeed;
     double migrationBias;
 
-    // cancer properties
-    double pdl1Shift;
 
     // interactions with other cells
-    double influenceRadius;
-    double pdl1;
-    double pdl1WhenExpressed;
-    std::array<double, 8> influences;
+    double influenceRadius; 
+    double pdl1;  
+    std::array<double, 8> influences; 
     std::array<double, 8> chemotaxVals;
-    double probTh;
-
-    // differentiation
-    double kTr;
-    double kM1;
-    double kM2;
-    double plasticity;
-
-    // T cell killing
-    double killProb;
-    double baseKillProb;
-    double infScale;
-    std::vector<std::string> t_cell_phenotype_Trajectory; 
+    
 
     // identification
     int id;
@@ -138,8 +130,20 @@ public:
     //lifespan
     size_t init_time; 
 
+    
+
+    //test
+
+    void neighbor_updated(Cell* n_ptr, int otherType, std::array<double, 2> otherX);
+
+    std::vector<Cell*> cell_neighbors; 
+    
+
+    boost::uuids::uuid getId() const;
+
 private:
     std::mt19937 mt;
+    boost::uuids::uuid idx;
 };
 
 #endif //IMMUNE_MODEL_CELL_H

@@ -5,8 +5,11 @@
 #include <algorithm>
 #include <random>
 #include "Cell.h"
+#include "CancerCell.h"
+#include "CD4Cell.h"
+#include "CD8Cell.h"
+#include "MacrophageCell.h"
 #include <iostream>
-#include <iomanip>      
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -14,6 +17,8 @@
 #include <filesystem> 
 #include <array>
 #include <omp.h>
+// #include "/usr/local/opt/libomp/include/omp.h"
+
 
 
 
@@ -28,6 +33,12 @@ private:
     void runCells(double tstep, size_t step_count);
     void neighborInfluenceInteractions(double tstep, size_t step_count);
     void internalCellFunctions(double tstep, size_t step_count);
+    
+    void internalCancerCellFunctions(double tstep, size_t step_count);
+    void internalCD4CellFunctions(double tstep, size_t step_count);
+    void internalCD8CellFunctions(double tstep, size_t step_count);
+    void internalMacrophageCellFunctions(double tstep, size_t step_count);
+
     void recruitImmuneCells(double tstep, size_t step_count);
     std::array<double, 2> recruitmentLocation();
     void tumorSize();
@@ -46,7 +57,13 @@ private:
     double dt;
 
     // cell lists
-    std::vector<Cell> cell_list;
+    
+    std::vector<CancerCell> cancer_list;
+    std::vector<CD4Cell> cd4_list;
+    std::vector<CD8Cell> cd8_list;
+    std::vector<MacrophageCell> macrophage_list;
+
+    
 
     // time courses
     std::vector<int> cancerTS;
@@ -62,7 +79,7 @@ private:
     where a char maps to a phenotypic state or an int where the int maps to 
     a phenotypic state
     */
-    std::vector<std::string> tCellPhenotypeTrajectory_1;
+    
 
     std::vector<std::vector<std::string>> tCellPhenotypeTrajectory; 
 

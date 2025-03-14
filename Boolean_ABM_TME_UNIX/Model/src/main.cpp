@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
     std::system(command);
 
     double start = omp_get_wtime();
-    Environment model(folder, set, "Model/phenotype_out/"); //can replace with a directory representing any other phenotype state 
+    Environment model(folder, set, "Model/phenotype_pdl1_out/"); //can replace with a directory representing any other phenotype state 
     model.simulate(1);
     double stop = omp_get_wtime();
     std::cout << "Duration: " << (stop-start)/(60*60) << std::endl;

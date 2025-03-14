@@ -1,4 +1,6 @@
 #include "Environment.h"
+#include "Cell.h"
+
 
 void Environment::loadParams() {
     std::ifstream dataCP(saveDir+"/params/cellParams.csv");
@@ -52,31 +54,84 @@ void Environment::save(double tstep, double tstamp) {
     myfile.close();
 
     myfile.open(day_dir+"/cells.csv");
+
+    for(auto &cd8 : cd8_list){
+        //logging cell location, 
+        size_t idx = (tstamp - cd8.init_time)*cd8.pTypeStateTransition; 
+            if(idx > cd8.get_t_cell_phenotype_Trajectory().size() - 1){
+                //we are outside of the array and want to get the last 
+                std::string pType = cd8.get_t_cell_phenotype_Trajectory()[cd8.get_t_cell_phenotype_Trajectory().size() - 1]; 
+                // call the getter for phenotype trajectory
+                myfile << cd8.type << ","
+                    << cd8.x[0] << ","
+                    << cd8.x[1] << ","
+                    << cd8.radius << ","
+                    << pType << ","
+                    << cd8.pdl1 << std::endl;
+            }
+            else{
+                std::string pType = cd8.get_t_cell_phenotype_Trajectory()[idx-1]; 
+                myfile << cd8.type << ","
+                    << cd8.x[0] << ","
+                    << cd8.x[1] << ","
+                    << cd8.radius << ","
+                    << pType << ","
+                    << cd8.pdl1 << std::endl;
+            }
+    }
+
+    for(auto &cd4 : cd4_list){
+        myfile << cd4.type << ","
+            << cd4.x[0] << ","
+            << cd4.x[1] << ","
+            << cd4.radius << ","
+            << cd4.state << ","
+            << cd4.pdl1 << std::endl;
+    }
+
+    for(auto &macrophage : macrophage_list){
+        myfile << macrophage.type << ","
+            << macrophage.x[0] << ","
+            << macrophage.x[1] << ","
+            << macrophage.radius << ","
+            << macrophage.state << ","
+            << macrophage.pdl1 << std::endl;
+    }
+
+    for(auto &cancer : cancer_list){
+        myfile << cancer.type << ","
+            << cancer.x[0] << ","
+            << cancer.x[1] << ","
+            << cancer.radius << ","
+            << cancer.state << ","
+            << cancer.pdl1 << std::endl;
+    }
+
+    /*
     for(auto &cell : cell_list){
         //logging cell location, type and state 
         if(cell.type == 3){ //cd8 t cell
-            size_t idx = (tstamp - cell.init_time)*cell.pTypeStateTransition; 
+
+            //type check with an if statement
+
+            
+
+
+
+            size_t idx = (tstamp - cell.init_time)*cd8cell.pTypeStateTransition; 
             if(idx > cell.t_cell_phenotype_Trajectory.size() - 1){
                 //we are outside of the array and want to get the last 
-                std::string phenotype_char; 
-                if (cell.t_cell_phenotype_Trajectory.empty() || (cell.t_cell_phenotype_Trajectory.size() == 0)){
-                    std::cerr << "WARNING LOGGING: t_cell_phenotype_Trajectory is empty!" << std::endl;
-                    phenotype_char = 'E'; 
-                }
-                else{
-                    phenotype_char = cell.t_cell_phenotype_Trajectory.back();         
-                }
-
+                std::string pType = cd8cell.t_cell_phenotype_Trajectory[cd8cell.t_cell_phenotype_Trajectory.size() - 1]; 
+                // call the getter for phenotype trajectory
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
                     << cell.radius << ","
-                    << phenotype_char << ","
+                    << pType << ","
                     << cell.pdl1 << std::endl;
             }
             else{
-                //we are in the array and can index
-                std::string pType = cell.t_cell_phenotype_Trajectory[idx]; 
+                std::string pType = cd8cell.t_cell_phenotype_Trajectory[idx-1]; 
                 myfile << cell.type << ","
                     << cell.x[0] << ","
                     << cell.x[1] << ","
@@ -94,6 +149,7 @@ void Environment::save(double tstep, double tstamp) {
                << cell.pdl1 << std::endl;
         }
     }
+    */
     myfile.close();
 
     /*myfile.open(day_dir+"/cancerCells.csv");

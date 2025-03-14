@@ -7,7 +7,12 @@ void Environment::initializeCells() {
      */
 
     double radiiCells = envParams[0];
-    cell_list.push_back(Cell({0.0,0.0}, 0, cellParams, 0, tCellPhenotypeTrajectory_1));
+
+
+    cancer_list.push_back(CancerCell(cellParams, 0, {0.0,0.0}, 0));
+
+
+
     int q = 1;
     for(int i=1; i<radiiCells; ++i){
         double circumfrence = 2*i*cellParams[4][0]*3.1415;
@@ -15,7 +20,7 @@ void Environment::initializeCells() {
         for(int j=0; j<nCells; ++j){
             double x = i * cellParams[4][0] * cos(2 * 3.1415 * j / nCells);
             double y = i * cellParams[4][0] * sin(2 * 3.1415 * j / nCells);
-            cell_list.push_back(Cell({x, y}, q, cellParams, 0, tCellPhenotypeTrajectory_1));
+            cancer_list.push_back(CancerCell(cellParams, 0, {x,y}, 0));
             q++;
         }
     }
@@ -28,6 +33,7 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
 
     int numC = cancerTS[steps - recruitmentDelay*24/tstep];
 
+    //{CD8, macrophage, CD4} -> same order as RecRates
     for(int i=0; i<immuneCellRecRates.size(); ++i){
         double recRate = immuneCellRecRates[i]*static_cast<double>(numC);
         immuneCells2rec[i] += tstep*recRate;
@@ -35,40 +41,85 @@ void Environment::recruitImmuneCells(double tstep,  size_t step_count) {
             std::array<double, 2> recLoc = recruitmentLocation();
             
             //i==0 represents the idx associated with initializing a cd8 t cell
-            if(i == 0){
+            if(i == 0)
+            {
                 
-                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
+                size_t phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()-1); 
 
                 std::vector<std::string> trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
-                if(trajec_phenotype.empty() || trajec_phenotype.size() == 0){
-                    std::cerr << "WARNING recruitImmuneCells: t_cell_phenotype_Trajectory is empty!" << std::endl;
-                    std::cerr << phenotypeIdx << std::endl; 
-                    std::cerr << "ATTEMPTING FORCE RESOLVE... " << std::endl; 
-                    phenotypeIdx = getRandomNumber(tCellPhenotypeTrajectory.size()); 
-                    trajec_phenotype = get2dvecrow(tCellPhenotypeTrajectory, phenotypeIdx);
-                    if(trajec_phenotype.empty() || trajec_phenotype.size() == 0){
-                        std::cerr << "FORCE RESOLVE FAILED... " << std::endl; 
-                    }
-                    else{
-                        std::cerr << "FORCE RESOLVE SUCCESSFUL... " << std::endl; 
-                    }
-                }
-                
 
-                cell_list.push_back(Cell(recLoc, 
-                                    static_cast<int>(cell_list.size()), 
-                                    cellParams, 
-                                    immuneCellRecTypes[i],
-                                    trajec_phenotype, 
-                                    step_count)); 
+                cd8_list.push_back(CD8Cell(cellParams, 0, recLoc, 3, trajec_phenotype));
+            }
+
+            //i==1 represents the idx associated with initializing a macrophage cell 
+            else if (i == 1)
+            {
+                macrophage_list.push_back(MacrophageCell(cellParams, 0, recLoc, 1));
+            }
+
+            //i==2 represents the idx associated with initializing a CD4 cell 
+            else if (i == 2)
+            {
+                cd4_list.push_back(CD4Cell(cellParams, 0, recLoc, 2));
+            }
+
+
+
+
+
+
+                // if (phenotypeIdx == 0){
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      cell_list[i].type, tCellPhenotypeTrajectory_1, step_count));
+
+                // }
+                // else if (phenotypeIdx == 1){
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      cell_list[i].type, tCellPhenotypeTrajectory_2, step_count));
+                // }
+                // else{
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      cell_list[i].type, tCellPhenotypeTrajectory_3, step_count));
+
+                // }
+                // size_t cell_state_trajectory = mt(); 
+                // if(cell_state_trajectory % 3 == 0){
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      immuneCellRecTypes[i], tCellPhenotypeTrajectory_1));
+                    
+                // }
+                // else if(cell_state_trajectory % 3 == 1){
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      immuneCellRecTypes[i], tCellPhenotypeTrajectory_2));
+                    
+                // }
+                // else{
+                //     cell_list.push_back(Cell(recLoc,
+                //                      static_cast<int>(cell_list.size()),
+                //                      cellParams,
+                //                      immuneCellRecTypes[i], tCellPhenotypeTrajectory_3));
+
+                // }
+            /*
             }
             else{
-                cell_list.push_back(Cell(recLoc,
+                cd8_list.push_back(CD8Cell(recLoc,
                                      static_cast<int>(cell_list.size()),
                                      cellParams,
                                      immuneCellRecTypes[i], tCellPhenotypeTrajectory_1));
 
             }
+            */
             
             immuneCells2rec[i] -= 1;
         }
@@ -155,24 +206,30 @@ void Environment::tumorSize(){
     double avgX = 0;
     double avgY = 0;
     double numC = 0;
-    for(auto &c : cell_list){
-        if(c.type == 0) {
-            avgX += c.x[0];
-            avgY += c.x[1];
-            numC += 1;
-        }
+    //for(auto &c : cell_list){
+    for(auto &c : cancer_list){
+        
+        avgX += c.x[0];
+        avgY += c.x[1];
+        numC += 1;
+        
     }
-    avgX /= numC;
-    avgY /= numC;
+
+    avgX /= cancer_list.size(); 
+    avgY /= cancer_list.size(); 
+    
+    
 
     tumorCenter = {avgX, avgY};
 
     tumorRadius = 0;
-    for(auto& c : cell_list){
+    //for(auto& c : cell_list){
+    for(auto& c : cancer_list){
         if(c.type == 0){
             tumorRadius = std::max(tumorRadius, c.calcDistance(tumorCenter));
         }
     }
+    std::cout << "tumor radius: " << tumorRadius << std::endl; 
 
     //originally commented out
 
@@ -222,7 +279,9 @@ void Environment::tumorSize(){
 
 void Environment::necrosis(double tstep) {
     int nCancer = 0;
-    for(auto &c : cell_list){
+   // for(auto &c : cell_list){
+    for(auto &c : cancer_list){
+
         if(c.type == 0){
             ++nCancer;
         }
@@ -232,6 +291,7 @@ void Environment::necrosis(double tstep) {
     necroticRadius = std::max(std::min(necroticRadius, tumorRadius-necroticLimit), 0.0);
 }
 
+/*
 double Environment::calculateDiffusibles(std::array<double, 2> x) {
     double d = 0;
     for(auto & c: cell_list){
@@ -246,3 +306,4 @@ double Environment::calculateDiffusibles(std::array<double, 2> x) {
 
     return d;
 }
+*/
